@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/benlopata/Documents/GitHub/ml-tensorflow"
+VIRTUAL_ENV="/Users/benlopata/Documents/GitHub/machine-learning/ml-tensorflow"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
