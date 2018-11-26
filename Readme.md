@@ -25,3 +25,24 @@ The difficulty in designing a neural network is in choosing which features to ma
 ### Clustering
 ### Rule extraction
 
+## Computation graph
+Analysis of a computation graph for two distinct nodes, which contain no overlapping dependencies, can be parallelized and even distributed to multiple machines in a cluster or cloud computing application. This can be referred to as "lazy evaluation".
+
+## Tensors
+The rank of a tensor is an integer. A scalar, for example, is rank 0.
+
+The two steps in a TensorFlow program are:
+  * building a graph
+  * running a graph
+
+
+Tensors connect nodes in a tensorflow application. A tensor is the central unit of data in TensorFlow. A tensor consists of a set of primitive values shaped into an array of any number of dimensions. 
+
+Vectors, which are 1-Dimensional tensor, are defined with one set of square brackets: [1, 3, 5, 7, 9].
+A matrix is a 2-Dimensional tensor, which is denoted by two sets of square brackets: [[1, 2], [2, 3] [3, 4 ]].
+### Rank of a tensor
+The rank, therefore, can be thought of as the number of square brackets enclosing the set of numbers.
+### Shape of a tensor
+The shape of a tensor defines how many elements exist along a certain dimension. For example, the above matrix ([[1, 2], [2, 3] [3, 4 ]]) has a shape of [2, 3] (three sets of pairs).
+### Data type  of a tensor
+The final defining characteristic is the data type: int, float, bool, etc.
