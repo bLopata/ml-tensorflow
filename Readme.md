@@ -22,6 +22,9 @@ The interaction of the individual neural layers and the neurons themselves can b
 The difficulty in designing a neural network is in choosing which features to map and how to architect and implement those designs.
 
 ### Regression
+Regression, or fitting a curve to a set of data points, is the simplest example of machine learning possible. Linear regression is the simplest form of regression. 
+
+The error of regression is calculated by taking the sum of the squares of the residuals, or distance between the regression fit line and all of the data points. 
 ### Clustering
 ### Rule extraction
 
