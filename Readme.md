@@ -1,5 +1,3 @@
-# Machine learning with tensorflow
-
 # Introduction
 
 ## Types of machine learning
@@ -25,14 +23,16 @@ A neural network is a deep learning representation classification system. A deep
 ![](./markdownImages/neuralNetwork.png)
 
 The interaction of the individual neural layers and the neurons themselves can be seen in the following image.
+
 ![](./markdownImages/neurons.png)
+
 The difficulty in designing a neural network is in choosing which features to map and how to architect and implement those designs.
 
 ### Regression
 
 Regression, or fitting a curve to a set of data points, is the simplest example of machine learning possible. Linear regression is the simplest form of regression.
 
-The error of regression is calculated by taking the sum of the squares of the residuals, or distance between the regression fit line and all of the data points.
+The _error_ of regression is calculated by taking the sum of the squares of the residuals, or distance between the regression fit line and all of the data points.
 
 In the LinearRegressionWithFakeData.ipynb example, the GradientDescentOptimizer library is used to solve the linear regression on a very simple data set to find the best fit line. Optimizer libraries provide simple, out of the box solutions to regression.
 
@@ -50,7 +50,7 @@ The connections to the left of a node are known as the direct or indirect depend
 
 ![](./markdownImages/computationGraphDependencies.png)
 
-The result of the computation graph has the loss calculated, which is then fed back in to the neural network which can be visualized using the neural network layered diagram:
+The result of the computation graph has the loss calculated, which is then fed back in to the neural network. This feedback loop can be visualized using either the neural network layered diagram:
 
 ![](.\markdownImages\neuralNetworkFeedback.png)
 
@@ -133,11 +133,11 @@ or on a specific variable using:
 
 In TensorFlow, working with images depends on using neural networks to perform image recognition. The pixels themselves, the fundamental building blocks of images, are converted to tensors using image recognition in the neural network algorithm.
 
-Image recognition using neural networks is accomplished by feeding a corpus of images into a feature selection and classification algorithm, the output of which is an ML-based classifier as discussed in [neural networks](#neural-networks). This classifier can then be applied to a new image to produce a classification label. Machine learning is accomplished by first training a model, then using the corpus of images (the training data) to tweak and optimize the parameters in that model, and then you have the classifier which can be used on a new image.
+Image recognition using neural networks is accomplished by feeding a corpus of images into a feature selection and classification algorithm, the output of which is an ML-based classifier (as discussed in [neural networks](#neural-networks)). This classifier can then be applied to a new image to produce a classification label. Machine learning is accomplished by first training a model, then using the corpus of images (the training data) to tweak and optimize the parameters in that model, and then you have the classifier which can be used on a new image.
 
 ## Images as Tensors
 
-The individual pixels of an image, as described above, are converted to tensors which can be used in the TensorFlow algorithm. Each pixel holds a value based on the type of image. For grayscale images, the pixel holds a value between 0-1 to describe the level of saturation of gray in that pixel. RGB (**R**ed, **G**reen, **B**lue) is another typical form of color encoding. For RGB encoding, three values are required to describe the color in each pixel. For pure red, the numerical representation in RGB encoding would be (255, 0, 0). Likewise, blue would be (0, 0 255) and green
+The individual pixels of an image, as described above, are converted to tensors which can be used in the TensorFlow application. Each pixel holds a value based on the type of image. For grayscale images, the pixel holds a value between 0-1 to describe the level of saturation of gray in that pixel. RGB (**R**ed, **G**reen, **B**lue) is another typical form of color encoding. For RGB encoding, three values are required to describe the color in each pixel. For pure red, the numerical representation in RGB encoding would be (255, 0, 0). Likewise, blue would be (0, 0 255) and green
 (0, 255, 0). These values are also called **channels** which represent the color in a pixel.
 
 Images can also be represented in 3-D tensors. The first two elements correspond to the pixel's x-and-y coordinate location, and the third element corresponds to the number of channels of color-encoding in the image.
@@ -154,7 +154,7 @@ TensorFlow typically deals with 4-Dimensional shape vector representation of ima
 
 TensorFlow supports built-in multi-threading via the `tf.train.coordinator()` and `tf.train.start_queue_runners()` functions which handle the threads and dispatch resources as needed to complete the image rendering and manipulation.
 
-Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete.
+Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete before continuing.
 
 #### Compiling images into a list
 
@@ -177,3 +177,5 @@ In the above example, the star represents the input image, and the various data 
 The L1 distance, also called the Manhattan distance, is the preferred method for dealing with distances in discrete space. This distance is found by counting the number of steps in each direction between two points.
 
 One-hot notation is a vector which represents the value of the digit corresponding to the index of the vector. For example, a 4 would have a vector of [0, 0, 0, 0, 1, 0, 0, 0, 0, 0] in one-hot notation, the fourth index of the vector being 1, the one-hot index, while all other indeces are zero. By definition, this notation can only be used on discrete quantities.
+
+For our MNIST comparison using the KNN algorithm, the 28 pixel x 28 pixel image tensors are flattened into vectors of length 784, which are then compared against the training data by summing the training data vector and the negation of the test data in 5,000-element chunks. This results in 5,000 vectors of length 784 containing the L1 distance between each pixel in the test image against the MNIST training data chunk. The sum of the absolute value of these vectors is then computed and reduced to a single-element vector per distance vector using `tf.abs()` and `tf.reduce_sum()`. For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for our test image, the label of which can be used to compare against the test digit to perform the supervised optimization of the algorithm.
