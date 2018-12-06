@@ -198,4 +198,11 @@ Linear regression can be implemented using a simple neural network of one neuron
 
 ![](./markdownImages/implementingRegression.png)
 
-An epoch is each iteration or step of the optimizer, and the batch size is the number of data points given to the optimizer for each epoch. Stochastic gradient descent optimizers use only one data point at a time, while mini-batch and batch gradient descent optimizers use a subset or the entirety of the data points, respectively, for each iteration.
+An epoch is each iteration or step of the optimizer, and the batch size is the number of data points given to the optimizer for each epoch. Stochastic gradient descent optimizers use only one data point at a time, while mini-batch and batch gradient descent optimizers use a subset or the entirety of the data points, respectively, for each iteration. The goal of the optimizer is to minimize the cost function of the regression.
+
+## Logistic Regression
+
+Linear regression seeks to quantify effects given causes. Logistic regression seeks to quantify the probability of effects given causes. While similar, the uses of logistic regression vary, and the TensorFlow implementation is different from linear regression in two primary ways:
+
+- logistic regression uses a softmax activation function, and
+- cross-entropy as the cross function to minimize the mean-square error (MSE).
