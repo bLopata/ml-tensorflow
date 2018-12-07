@@ -98,7 +98,7 @@ There are three data types for tensors in TensorFlow: Constants, placeholders, a
 
 ### Constants
 
-Immutable values.
+Constants are immutable values used for storing discrete values in TensorFlow.
 
 ### Placeholders
 
@@ -154,15 +154,15 @@ In the above image, the left tensor is a grayscale image, whereas the right tens
 
 TensorFlow typically deals with 4-Dimensional shape vector representation of images, where the first value is the number of images in the list. For example, a list of 10 of the 6 pixel by 6 pixel images above with 3-channel color representation would have a shape vector of (10, 6, 6, 3) - 10 images, of 6 x 6 pixel size, and 3-channel color representation respectively.
 
-### Working with images in TensorFlow
+## Working with images in TensorFlow
 
-#### Multithreading
+### Multithreading
 
 TensorFlow supports built-in multi-threading via the `tf.train.coordinator()` and `tf.train.start_queue_runners()` functions which handle the threads and dispatch resources as needed to complete the image rendering and manipulation.
 
 Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete before continuing.
 
-#### Compiling images into a list
+### Compiling images into a list
 
 Calling `tf.stack*)` on an array of images will convert a list of 3-D tensors into a single 4-D tensor. For example, two-(224, 224, 3) tensors will become (2, 224, 224, 3) which is an array of two 224 pixel x 224 pixel, three-channel image tensors.
 
@@ -192,7 +192,7 @@ For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for 
 
 A machine learning algorithm is one which is able to learn from data. "Learning" is defined as a computer program with respect to some class of tasks T, and performance measure P which improves with experience E. This performance measure could be accuracy in a classification algorithm, residual variance in regression, or a number of other metrics.
 
-## Implementing Regression
+## Implementing Linear Regression
 
 Linear regression can be implemented using a simple neural network of one neuron containing a linear activation function. The implementation of an ML-based regression algorithm is as follows:
 
@@ -202,7 +202,50 @@ An epoch is each iteration or step of the optimizer, and the batch size is the n
 
 ## Logistic Regression
 
-Linear regression seeks to quantify effects given causes. Logistic regression seeks to quantify the probability of effects given causes. While similar, the uses of logistic regression vary, and the TensorFlow implementation is different from linear regression in two primary ways:
+Linear regression seeks to quantify effects given causes, while logistic regression seeks to quantify the probability of effects given causes. For this reason, logistic regression is also known as linear classification.
+
+While similar, the uses of logistic regression vary, and the TensorFlow implementation is different from linear regression in two primary ways:
 
 - logistic regression uses a softmax activation function, and
-- cross-entropy as the cross function to minimize the mean-square error (MSE).
+- cross-entropy as the cost function to minimize the mean-square error (MSE).
+
+Logistic regression uses a probability function which results in an increasing probability for positive values of A and B, and a decreasing probability for negative values of A and B (per the below image)
+
+![](./markdownImages/logisticRegression.png)
+
+Logistic regression requires a categorical dependent or y-variable, and can use a continuous or categorical x-variable just like linear regression. Logistic regression seeks to fit the data to an S-curve by solving for the optimal values of the A and B variables. Logistic regression can be converted to a linear form by taking the log transformation of the probability equation. This is known as the logit equation, which is defined as the natural log of the odds function.
+
+## Implementing Logistic Regression
+
+Logistic regression varies from linear regression implementation in two primary ways as described above:
+
+- softmax activation function
+- and cross-entropy cost function
+
+The number of neurons required to implement logistic regression in TensorFlow is the number of classification labels required minus one. So for binary classification, our labels are True and False, and as such this requires only one neuron to implement (2 - 1 = 1).
+
+![](./markdownImages/implementingLogisticRegression.png)
+
+The left-hand side of the neuron-level image is identical to the linear regression neuron, with the activation function producing the probability equations as shown in the below image.
+
+![](./markdownImages/logisticRegressionNeuralNetwork.png)
+
+Generalizing, an M-length feature vector with N number of required classifications requires the W vector to be [M, N] and b to be [N].
+
+![](./markdownImages/logisticRegressionGeneralized.png)
+
+The cross-entropy cost function for logistic regression can be visualized by imagining two sets of series data: one for the actual y-values (y_actual) and one for the predicted y-values (y_predicted). Superimposing these two series on the same axis results in either the labels of the two series being lined up as in the below image, or not lined up. The lined up, or in-synch labels result in a low cross-entropy, while out of synch labels result in a high cross entropy. Cross-entropy is a way to determine if two sets of numbers have been drawn from similar or different probability distributions.
+
+![](./markdownImages/crossEntropyVisualized.png)
+
+For the logistic regression lab, we are utilizing the single neuron implementation of logistic regression in TensorFlow to determine the probability of Google stock having an increasing or decreasing return from one month to the next by classifying the returns of the S&P 500 index as our independent variable. We have used pandas and numpy in determining the baseline, and will compare that result to the ML-based logistic regression.
+
+The softmax activation function is invoked using the following method in the `tf.nn` TensorFlow neural network library:
+
+```python
+tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
+```
+
+`y_` is our placeholder for the output label of the softmax function (either True - 1 or False - 0) in One Hot notation. `y` is the output of the affine transformation, or the input to the softmax activation function `y=W*x + b`.
+
+We use `tf.reduce_mean` on this softmax activation function to compute our cross-entropy calculation to compare the probability distributions of our predicted value against the actual value (Google stock increasing/decreasing versus S&P increasing/decreasing).
