@@ -330,7 +330,7 @@ Two heuristics for determining the effectiveness of the model are the F1 score a
 
 F1 Score - the harmonic mean of precision and recall - can be computed by the following formula:
 
-F1 = 2 _ (Precision _ Recall) / (Precision + Recall)
+F1 = 2 X (Precision X Recall) / (Precision + Recall)
 
 The F1 score will be closer to the lower of recall and precision and favors an even tradeoff between recall and precision. Determining the optimal values is done with an iterative process similar to hyperparameter tuning. First you tweak the threshold values before computing the precision, recall, and the F1 score of the model. The higher the F1 score, the better the model is graded.
 
