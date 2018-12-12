@@ -1,6 +1,6 @@
 # Introduction
 
-## Types of machine learning
+## Main Types of machine learning
 
 ### Classification
 
@@ -16,7 +16,23 @@ ML-based classifiers differ from traditional "rule-based" classifiers in that:
 
 <a name="neural-networks"></a>
 
-### Neural networks
+### Regression
+
+Regression, or fitting a curve to a set of data points, is the simplest example of machine learning possible. Linear regression is the simplest form of regression.
+
+The _error_ of regression is calculated by taking the sum of the squares of the residuals, or distance between the regression fit line and all of the data points.
+
+In the LinearRegressionWithFakeData.ipynb example, the GradientDescentOptimizer library is used to solve the linear regression on a very simple data set to find the best fit line. Optimizer libraries provide simple, out of the box solutions to regression.
+
+### Clustering
+
+Clustering is looking at the input data and trying to find logical grouping within the data.
+
+### Rule extraction
+
+Determining implicit rules, or correlational relationships, within the input data.
+
+## Neural networks
 
 A neural network is a deep learning representation classification system. A deep learning system is one which decides it's feature vector in part or in whole independently. A deep learning-based binary classifier (seen in below image) requires a corupus of data, a feature selection & classification algorithm which contains multiple neural layers comprised of neurons. The neural layers which interact with the images directly (the Pixels and Object Parts layer which take in the image and output the image to the ML-based classifier in the example) are called visible layers, while the others are known as hidden layers.
 
@@ -34,17 +50,7 @@ The network contains complex interconnects between simple neurons. Different con
 
 The values of W and b, which are variables, are determined by TensorFlow in the training process. The objective of the training process is to determine the optimal values of W and b for each neuron. This is accomplished using the cost function, the optimizer, and run for a set number of iterations, all which are specified by the developer. During the training process, outputs from the deeper layers must be fed back to the earlier layers to determine the optimal values, this is known as back propogation. The activation function, the second step of the neuron-level operation, allows neural networks to perform linear or non-linear transformations.
 
-### Regression
-
-Regression, or fitting a curve to a set of data points, is the simplest example of machine learning possible. Linear regression is the simplest form of regression.
-
-The _error_ of regression is calculated by taking the sum of the squares of the residuals, or distance between the regression fit line and all of the data points.
-
-In the LinearRegressionWithFakeData.ipynb example, the GradientDescentOptimizer library is used to solve the linear regression on a very simple data set to find the best fit line. Optimizer libraries provide simple, out of the box solutions to regression.
-
-### Clustering
-
-### Rule extraction
+# Introduction to TensorFlow
 
 ## Computation graph
 
@@ -289,6 +295,46 @@ _Regularization_ is simple to accomplish with gradient descent optimizers by add
 With _cross-validation_ comes hyperparameter tuning, and running training data through multiple models, choosing the model which most accurately predicts the test data.
 
 "_Dropout_", which is deactivating a random subset of the the neurons within a NN, causes the neurons which remain on during a particular training phase to recognize patterns in the data using a different network configuration. This results in a more robust NN which is less prone to overfitting.
+
+### Prediction Accuracy
+
+Prediction accuracy is the primary metric for validating the efficacy of a ML-algorithm. Accuracy itself, however, is ineffective when dealing with a _skewed dataset_, that is one where certain labels are far more or far less common than other labels. Accuracy can be computed by dividing the sum of the true positive and negative results (that is, where the predicted label = actual label) divided by the total number of predictions.
+
+Precision, which can be thought of as a measure of exactness or quality, is computed by dividing the true positive (predictied label = actual label) by the sum total number of positives (true and false).
+
+Recall, which is the measure of completeness or quantity, can be computed by accuracy of the prediction label versus the total number of "true" labels for a binary classifier (true positive and false negative).
+
+![](./markdownImages/confusionMatrix.png)
+
+Stated differently,
+
+Accuracy = (TP + TN) / (Total #)
+
+Precision = TP / (TP + FP)
+
+Recall = TP / (TP + FN)
+
+### Decision Threshold
+
+The decision threshold is the point on a logistic curve at which the model predicts one label for probabilities lower than the threshold and the other label for probabilities higher than the threshold (for binary classifiers). This can also be thought of as an s-curve with Precision on the y-axis and conservativeness on the x-axis. As conservativeness increases, so too does prediction. However, a model which is too precise is also too constrained to provide accurate results; for instance, a decision threshold of 1 - or 100% - will result in only negative results. On the other hand, a model which is too liberal in predicting positive results, having too low of a decision threshold, results in an all positive result set but very low precision.
+
+Plotting recall versus conservativeness results in a reciprocal graph to Precision versus Conservativeness graph. Thus, a model which has high recall has low precision, and a model with high precision has low recall.
+
+![](./markdownImages/precisionRecallTradeoff.png)
+
+### Choosing Model Characteristics
+
+How then are we to choose a model which can maximize true results without making the negative results too common?
+
+Two heuristics for determining the effectiveness of the model are the F1 score and the ROC.
+
+F1 Score - the harmonic mean of precision and recall - can be computed by the following formula:
+
+F1 = 2 _ (Precision _ Recall) / (Precision + Recall)
+
+The F1 score will be closer to the lower of recall and precision and favors an even tradeoff between recall and precision. Determining the optimal values is done with an iterative process similar to hyperparameter tuning. First you tweak the threshold values before computing the precision, recall, and the F1 score of the model. The higher the F1 score, the better the model is graded.
+
+ROC curve - or receiver operator characteristic - is a plot of the true positive rate versus the false positive rate. The ideal model has a very high TP rate, and a FP rate of zero. The ROC curve can be computed by tweaking the threshold value iteratively and computing the True Positive (TP) rate and False Positive (FP) rate, and choosing the point at the top-left of the curve.
 
 # Labs
 
