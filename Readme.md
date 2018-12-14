@@ -190,10 +190,6 @@ The L1 distance, also called the Manhattan distance, is the preferred method for
 
 One-hot notation is a vector which represents the value of the digit corresponding to the index of the vector. For example, a 4 would have a vector of [0, 0, 0, 0, 1, 0, 0, 0, 0, 0] in one-hot notation, the fourth index of the vector being 1, the one-hot index, while all other indeces are zero. By definition, this notation can only be used on discrete quantities.
 
-For our MNIST comparison using the KNN algorithm, the 28 pixel x 28 pixel image tensors are flattened into vectors of length 784, which are then compared against the training data by summing the training data vector and the negation of the test data in 5,000-element chunks. This results in 5,000 vectors of length 784 containing the L1 distance between each pixel in the test image against the MNIST training data chunk. The sum of the absolute value of these vectors is then computed and reduced to a single-element vector per distance vector using `tf.abs()` and `tf.reduce_sum()`.
-
-For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for our test image, then the label of the nearest neighbor from the training data can be used to compare against the test digit to perform the supervised optimization of the algorithm.
-
 ## Learning algorithms
 
 A machine learning algorithm is one which is able to learn from data. "Learning" is defined as a computer program with respect to some class of tasks T, and performance measure P which improves with experience E. This performance measure could be accuracy in a classification algorithm, residual variance in regression, or a number of other metrics.
@@ -366,6 +362,14 @@ Each neuron's receptive field includes all the feature maps of all previous laye
 
 ![](./markdownImages/explodedViewCNN.png)
 
+### Pooling Layers
+
+Pooling layers subsample inputs into convolution layers. The neurons in a pooling layer have no associated weights or biases. A pooling layer neuron simply applies an aggregate function to all inputs. Pooling layers greatly reduce time and memory usage during training by reducing the numbers of parameters via aggregation and also mitigate overfitting to test data via subsampling. Pooling layers also allow NN to recognize features indpendent of location. Pooling is typically done on each channel independently.
+
+### CNN Architectures
+
+CNNs are typically comprised of alternating convolutional and pooling layers. The output of each of the convolutional and pooling layers is an image, and the images shrink in size successively due to the subsampling done in the pooling layers. Each successive output image is also deeper due to the feature maps in the convolutional layer. The output of the entire set of these convolutional and pooling layers is then fed into a regular, feed-forward dense neural network which has a few, fully-connected layers each with a ReLU activation function and finally a SoftMax prediction layer to provide classification. For digit classification, there are 10 prediction labels, for image classification there can be more or fewer prediction labels.
+
 # Labs
 
 ## Logistic Regression Lab
@@ -382,6 +386,12 @@ tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
 We use `tf.reduce_mean` on this softmax activation function to compute our cross-entropy calculation to compare the probability distributions of our predicted value against the actual value (Google stock increasing/decreasing versus S&P increasing/decreasing).
 
+## MNIST & KNN Lab
+
+For this lab we are using the MNIST dataset of hand-written numbers. In our comparison using the KNN algorithm, the 28 pixel x 28 pixel image tensors are flattened into vectors of length 784, which are then compared against the training data by summing the training data vector and the negation of the test data in 5,000-element chunks. This results in 5,000 vectors of length 784 containing the L1 distance between each pixel in the test image against the MNIST training data chunk. The sum of the absolute value of these vectors is then computed and reduced to a single-element vector per distance vector using `tf.abs()` and `tf.reduce_sum()`.
+
+For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for our test image, then the label of the nearest neighbor from the training data can be used to compare against the test digit to perform the supervised optimization of the algorithm.
+
 ## Neural Network Automobile Prices Lab
 
 For this lab we used a public dataset of automobiles from UCI as the training data to an ML-based predictor of automobile price given various categorical and numerical features from the dataset such as make, engine type, miles-per-gallon, etc. We created a pandas dataframe to read in and clean up the data and passed it into TensorFlow using `tf.estimator.inputs.pandas_input_fn()` which is a built-in method in TensorFlow which takes in a pandas data frame as an input. We defined `feature_columns` as an array of both categorical and numerical column data as unique entries for each column in the dataset. Scaling the price column to tens of thousands of dollars rather than the full price was used to improve accuracy as TensorFlow works better with smaller numbers. These scaled values were converted back to dollars after the training.
@@ -391,3 +401,49 @@ We tweaked the neural network configuration using the `hidden_units` parameter o
 ## Iris flower DNN Classifier Lab
 
 For this lab, we are working with the iris data set. The objective of this ML model is to predict the label of the iris based on the features which are the Sepal length and width and petal length and width. Rather than using pandas for this lab, we are using TensorFlow to iterate over the .csv dataset by invoking `tf.decode_csv()` which extracts the header data from the .csv file. The features are created by zipping the feature names into a dictionary for each line in the iterator. We invoke `tf.data.TextLineDataset().map()` in our helper method `get_features_labels(filename, shuffle=False, repeat_count=1)` which allows for shuffling to randomize the order of the data, `repeat_count` allows for copying of the dataset, and we specify the `batch_size` as 32. We use the `dataset.make_one_shot_iterator()` method which iterates over the dataset exactly once.
+
+# Convolution Neural Network Lab
+
+For this lab we are using the publicly available house number dataset from Stanford. The house numbers are in a matlab file format, which requires additional python libraries `scipy` and `scipy.io` to read in the files and `matplotlib` and `matplotlib.pyplot` which allows for inline plotting in IPythonNotebooks in addition to the usual numpy, pandas, and tensorflow libraries. Similar to the MNIST number lab, the goal is to create an ML-based classifier which can predict the number represented in an image. However, the shape of our image tensor is now (32, 32, 3) which is a larger, color image than the MNIST dataset.
+
+Our CNN is specified to have two convolutional layers and one pooling layer. The first convolutional layer, `conv1` is defined as having 32 feature maps, with a kernel size of 3x3, a stride of 1, with a padding of `"SAME"`, which means that the size of the output is equal to the size of the input divided by the stride size and the input will be zero-padded as necessary to acheive this result. The second layer, `conv2` is defined as having 64 feature maps, a 3x3 kernel size, and a stride of 2, also with `"SAME"` padding. The single pooling layer has the same number of feature maps as the final convolutional layer, `conv2` which is 64 - we store this in a variable `pool3_feature_maps`.
+
+The DNN is a single, feed-forward layer, `n_fullyconn1`, which has 64 neurons and 11 outputs to accomodate label values between 1-10.
+
+We call `tf.reset_default_graph()` to clear any nodes that have been added to the default x. The `x` placeholder input is defined as `X = tf.placeholder(tf.float32, shape=[None, height, width, channels], name="X")` and the y is similiarly defined as an array of integers with shape [None]. We declare the first convolutional layer, `conv1` as follows:
+
+```python
+conv1 = tf.layers.condv2d(X, filters=conv1_feature_maps),
+kernel_size=conv1_kernel_size,
+strides=conv2_stride, padding=conv1_pad,
+activaiton=tf.nn.relu, name="conv1")
+```
+
+`conv2` is similarly declared. The shape of these two convolutional layers is as follows:
+
+```python
+conv1.shape
+TensorShape([Dimension(None), Dimension(32), Dimension(32), Dimension(32)])
+
+conv2.shape
+TensorShape([Dimension(None), Dimension(16), Dimension(16), Dimension(64)])
+```
+
+The output of the `conv2` is 16 by 16 because we chose a stride length of two.
+
+The pooling layer is instantiated using `tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding="VALID")` which means the input comes from `conv2`. ksize, which is an array of parameters defined by `[batch_size, height, width, channels]`
+
+TensorFlow does support pooling across multiple channels in an image, **or** pooling across the height and the width, but not both.
+
+We similarly specify `strides=[batch_size, height, width, channels]` and `"VALID"` padding, which means the input will not be zero-padded.
+
+```python
+pool3.shape
+TensorShape([Dimension(None), Dimension(8), Dimension(8), Dimension(64)])
+```
+
+We flatten the output of the pooling layer into a single 1-D array using `tf.reshape(pool3, shape=[-1, pool3_feature_maps * 8 * 8])` and feed the output of the pooling layer into a DNN defined by
+
+```python
+tf.layers.dense(pool3_flat, n_fullyconn1, activation=tf.nn.relu, name="fc1")
+```
