@@ -350,7 +350,7 @@ The most important part of a CNN are the convolution layers as the local recepti
 
 ### Design Features of CNNs
 
-_Zero padding_, adding a certain number of rows and columns of zeroes to the edges of your data, is meant to have every element represented in the filtered result. Without zero padding, some elements will not be represented in the convolution matrix. Zero padding can also be used to acheive _wide-convolution_ which is when a convolution matrix is larger than the input matrix.
+_Zero padding_, adding a certain number of rows and columns of zeroes to the edges of your data, is used in order to have every element represented in the filtered result. Without zero padding, some elements will not be represented in the convolution matrix. Zero padding can also be used to acheive _wide-convolution_ which is when a convolution matrix is larger than the input matrix.
 
 _Stride size_ is the number of rows to skip when moving horizontally and columns to move when moving vertically when sliding the kernel function. This determines how much of the local receptive field which will overlap when performing convolution. The lower the stride size, the greater the overlap.
 
@@ -360,7 +360,7 @@ Dense neural networks, those which have an interconnection between each neuron o
 
 ### Feature Maps
 
-Convolutional layers are comprised of feature maps, which are themselves comprised of a number of neurons, each having received values based on the values of the local receptive field of the kernel function from the previous layer. Because the feature map is created from the same kernel function, all neurons within the feature map have the same weights and biases. CNNs are sparse neural networks since there is not a 1:1 correlation between neurons in two adjacent layers.
+Convolutional layers are comprised of feature maps, which are themselves comprised of a number of neurons, each having received values based on the values of the local receptive field of the kernel function from the previous layer. Because the feature map is created from the same kernel function, all neurons within each feature map have the same weights and biases. CNNs are sparse neural networks since there is not a 1:1 correlation between neurons in two adjacent layers.
 
 Each neuron's receptive field includes all the feature maps of all previous layers. In this way, aggregated features are processed in convolutional layers. For a visualization of how CNNs are constructed, see the image below. Many feature maps comprise a convolutional layer, and many convolutional (and pooling layers) comprise a single CNN.
 
