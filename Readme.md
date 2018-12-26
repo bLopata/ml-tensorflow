@@ -442,8 +442,57 @@ pool3.shape
 TensorShape([Dimension(None), Dimension(8), Dimension(8), Dimension(64)])
 ```
 
-We flatten the output of the pooling layer into a single 1-D array using `tf.reshape(pool3, shape=[-1, pool3_feature_maps * 8 * 8])` and feed the output of the pooling layer into a DNN defined by
+We flatten the output of the pooling layer into a single 1-D array using `tf.reshape(pool3, shape=[-1, pool3_feature_maps * 8 * 8])` and feed the output of the pooling layer into a DNN which we label as `logits` and is defined by
 
 ```python
 tf.layers.dense(pool3_flat, n_fullyconn1, activation=tf.nn.relu, name="fc1")
+```
+
+We set up our cost function using the cross entropy as we did in the logistic regression lab. We pass in the DNN defined in the above line to
+
+```python
+tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=y)
+```
+
+Once again, we calculate the lost by calculating `tf.reduce_mean()` on this cost function, the optimizer chosen for this lab is the Adam optimizer which we call with `tf.train.AdamOptimizer()` and have this minimize the loss. We define an accurate prediction as `tf.nn.in_top_k(logits, y, 1)` to determine if the predicted result is equal to the training label, and calculate the accuracy with `tf.reduce_mean()` on the correctly predicted labels.
+
+We define a helper method to determine the start and end indices for our training data set.
+
+```python
+current_iteration = 0
+
+def get_next_batch(batch_size):
+
+    global current_iteration
+
+    start_index = (current_iteration * batch_size) % len(y_train)
+    end_index = start_index + batch_size
+
+    x_batch = x_train[start_index: end_index]
+    y_batch = y_train[start_index: end_index]
+
+    current_iteration = current_iteration + 1
+
+    return x_batch, y_batch
+```
+
+The parameters chosen are for a batch size of 10,000 data points with 10 epochs or iterations. We instantiate a TensorFlow using `tf.Session()` and initialize our variables using `tf.global_variables_initializer.run()`. The accuracy is computed within each epoch to show the improvement of the model as the optimizer is run.
+
+```python
+with tf.Session() as sess:
+    init.run()
+
+    num_examples = len(y_train)
+    for epoch in range(n_epochs):
+        for iteration in range(num_examples // batch_size):
+
+            X_batch, y_batch = get_next_batch(batch_size)
+
+            sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+
+        acc_train = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
+
+        acc_test = accuracy.eval(feed_dict={X: x_test, y: y_test})
+
+        print(epoch, "Train accuracy:", acc_train, "Test accuracy:", acc_test)
 ```
