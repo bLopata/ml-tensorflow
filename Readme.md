@@ -372,7 +372,7 @@ CNNs are typically comprised of alternating convolutional and pooling layers. Th
 
 # Labs
 
-## Logistic Regression Lab
+## Logistic Regression
 
 For the logistic regression lab, we are utilizing the single neuron implementation of logistic regression in TensorFlow to determine the probability of Google stock having an increasing or decreasing return from one month to the next by classifying the returns of the S&P 500 index as our independent variable. We have used pandas and numpy in determining the baseline, and will compare that result to the ML-based logistic regression.
 
@@ -386,23 +386,23 @@ tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
 We use `tf.reduce_mean` on this softmax activation function to compute our cross-entropy calculation to compare the probability distributions of our predicted value against the actual value (Google stock increasing/decreasing versus S&P increasing/decreasing).
 
-## MNIST & KNN Lab
+## MNIST & KNN
 
 For this lab we are using the MNIST dataset of hand-written numbers. In our comparison using the KNN algorithm, the 28 pixel x 28 pixel image tensors are flattened into vectors of length 784, which are then compared against the training data by summing the training data vector and the negation of the test data in 5,000-element chunks. This results in 5,000 vectors of length 784 containing the L1 distance between each pixel in the test image against the MNIST training data chunk. The sum of the absolute value of these vectors is then computed and reduced to a single-element vector per distance vector using `tf.abs()` and `tf.reduce_sum()`.
 
 For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for our test image, then the label of the nearest neighbor from the training data can be used to compare against the test digit to perform the supervised optimization of the algorithm.
 
-## Neural Network Automobile Prices Lab
+## Neural Network Automobile Prices
 
 For this lab we used a public dataset of automobiles from UCI as the training data to an ML-based predictor of automobile price given various categorical and numerical features from the dataset such as make, engine type, miles-per-gallon, etc. We created a pandas dataframe to read in and clean up the data and passed it into TensorFlow using `tf.estimator.inputs.pandas_input_fn()` which is a built-in method in TensorFlow which takes in a pandas data frame as an input. We defined `feature_columns` as an array of both categorical and numerical column data as unique entries for each column in the dataset. Scaling the price column to tens of thousands of dollars rather than the full price was used to improve accuracy as TensorFlow works better with smaller numbers. These scaled values were converted back to dollars after the training.
 
 We tweaked the neural network configuration using the `hidden_units` parameter of the `tf.estimator.DNNRegressor()` method between a two-layer and a three-layer configuration to demonstrate the effectiveness of each on our resulting training model. The accuracy improved substantially when using a three-layer DNN (dense neural network) with the configuration of [24, 16, 24] neurons rather than the two-layer configuration of [20, 20] neurons.
 
-## Iris flower DNN Classifier Lab
+## Iris flower DNN Classifier
 
 For this lab, we are working with the iris data set. The objective of this ML model is to predict the label of the iris based on the features which are the Sepal length and width and petal length and width. Rather than using pandas for this lab, we are using TensorFlow to iterate over the .csv dataset by invoking `tf.decode_csv()` which extracts the header data from the .csv file. The features are created by zipping the feature names into a dictionary for each line in the iterator. We invoke `tf.data.TextLineDataset().map()` in our helper method `get_features_labels(filename, shuffle=False, repeat_count=1)` which allows for shuffling to randomize the order of the data, `repeat_count` allows for copying of the dataset, and we specify the `batch_size` as 32. We use the `dataset.make_one_shot_iterator()` method which iterates over the dataset exactly once.
 
-# Convolution Neural Network Lab
+# Convolution Neural Network
 
 For this lab we are using the publicly available house number dataset from Stanford. The house numbers are in a matlab file format, which requires additional python libraries `scipy` and `scipy.io` to read in the files and `matplotlib` and `matplotlib.pyplot` which allows for inline plotting in IPythonNotebooks in addition to the usual numpy, pandas, and tensorflow libraries. Similar to the MNIST number lab, the goal is to create an ML-based classifier which can predict the number represented in an image. However, the shape of our image tensor is now (32, 32, 3) which is a larger, color image than the MNIST dataset.
 
@@ -496,3 +496,33 @@ with tf.Session() as sess:
 
         print(epoch, "Train accuracy:", acc_train, "Test accuracy:", acc_test)
 ```
+
+The output for each epoch is as follows:
+
+0 Train accuracy: 0.48 Test accuracy: 0.45933333
+
+1 Train accuracy: 0.68 Test accuracy: 0.606
+
+2 Train accuracy: 0.7 Test accuracy: 0.696
+
+3 Train accuracy: 0.77 Test accuracy: 0.718
+
+4 Train accuracy: 0.8 Test accuracy: 0.738
+
+5 Train accuracy: 0.83 Test accuracy: 0.74733335
+
+6 Train accuracy: 0.86 Test accuracy: 0.746
+
+7 Train accuracy: 0.89 Test accuracy: 0.77066666
+
+8 Train accuracy: 0.9 Test accuracy: 0.758
+
+9 Train accuracy: 0.87 Test accuracy: 0.7673333
+
+## Building a CNN Using Estimator API
+
+In this lab we are returning to the MNIST dataset, however this time we will be constructing a custom convolutional neural network (CNN) using TensorFlow's Estimator API. The MNIST dataset contains images of a single digit which are 28 pixels x 28 pixels in grayscale, or a (28, 28, 1) image tensor. Once again in this lab, we set up the needed import statements and pull the dataset directly from Google. We define variables for the height, width, and channels of the images, and also the various features of each convolutional layer wihin the CNN: the number of feature maps, the kernel and stride sizes, and zero padding.
+
+We then define a helper function to build a custom CNN for a defined set of features. This helper function first reshapes the input data into the appropriate dimensions for the images. Next we define two convolutional layers and one pooling layer using `tf.layers.conv2d()` and `tf.nn.max_pool()` and pass in the previously declared variables for the CNN. We are using the ReLu activation function for this CNN. The pooling layer is then flattened into a 1-D array to be connected to the dense neural network (DNN) which has 64 neurons. The return value of this helper function is the output of the logits layer which will later be optimized using cross-entropy as performed in the previous lab.
+
+In order TensorFlow's estimator API, we need to set up a model function which has three inputs: "features", "labels", and "mode". The "mode" being either prediction, evalutation, or training. The "features" are a dictionary of specifications which we pass in to the helper function we created in the previous step to build our CNN.
