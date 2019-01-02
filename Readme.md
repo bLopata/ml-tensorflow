@@ -143,6 +143,12 @@ or on a specific variable using:
 
 # Working with TensorFlow
 
+## Multithreading
+
+TensorFlow supports built-in multi-threading via the `tf.train.coordinator()` and `tf.train.start_queue_runners()` functions which handle the threads and dispatch resources as needed to complete the image rendering and manipulation.
+
+Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete before continuing.
+
 ## Working with Images
 
 In TensorFlow, working with images depends on using neural networks to perform image recognition. The pixels themselves, the fundamental building blocks of images, are converted to tensors using image recognition in the neural network algorithm.
@@ -162,15 +168,13 @@ In the above image, the left tensor is a grayscale image, whereas the right tens
 
 TensorFlow typically deals with 4-Dimensional shape vector representation of images, where the first value is the number of images in the list. For example, a list of 10 of the 6 pixel by 6 pixel images above with 3-channel color representation would have a shape vector of (10, 6, 6, 3) - 10 images, of 6 x 6 pixel size, and 3-channel color representation respectively.
 
-### Multithreading
-
-TensorFlow supports built-in multi-threading via the `tf.train.coordinator()` and `tf.train.start_queue_runners()` functions which handle the threads and dispatch resources as needed to complete the image rendering and manipulation.
-
-Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete before continuing.
-
 ### Compiling images into a list
 
 Calling `tf.stack()` on an array of images will convert a list of 3-D tensors into a single 4-D tensor. For example, two-(224, 224, 3) tensors will become (2, 224, 224, 3) which is an array of two 224 pixel x 224 pixel, three-channel image tensors.
+
+## Learning algorithms
+
+A machine learning algorithm is one which is able to learn from data. "Learning" is defined as a computer program with respect to some class of tasks T, and performance measure P which improves with experience E. This performance measure could be accuracy in a classification algorithm, residual variance in regression, or a number of other metrics.
 
 ## MNIST & K-nearest-neighbor Algorithm
 
@@ -190,9 +194,7 @@ The L1 distance, also called the Manhattan distance, is the preferred method for
 
 One-hot notation is a vector which represents the value of the digit corresponding to the index of the vector. For example, a 4 would have a vector of [0, 0, 0, 0, 1, 0, 0, 0, 0, 0] in one-hot notation, the fourth index of the vector being 1, the one-hot index, while all other indeces are zero. By definition, this notation can only be used on discrete quantities.
 
-## Learning algorithms
-
-A machine learning algorithm is one which is able to learn from data. "Learning" is defined as a computer program with respect to some class of tasks T, and performance measure P which improves with experience E. This performance measure could be accuracy in a classification algorithm, residual variance in regression, or a number of other metrics.
+# Regression
 
 ## Implementing Linear Regression
 
@@ -563,3 +565,40 @@ if mode == tf.estimator.ModeKeys.PREDICT:
 ```
 
 Otherwise we will calculate the loss, again using `tf.reduce_mean()` and setup the optimizer, once again we are using the Adam optimizer, and minimize the loss as done in the previous CNN lab. We set our optimizer to run for 2000 steps with a batch size of 100 and print out the loss for every 100 steps. After running a test model, we obtain an accuracy of 98.6% - far higher than the previous CNN lab due to the decreased complexity of the dataset.
+
+## RNNs for Image Classification
+
+For this lab we are using the MNIST dataset using recurrent neural networks (RNNs). We begin by importing the modules for the lab: TensorFlow, matplotlib, and numpy as well as the MNIST dataset downloaded directly from the TensorFlow example tutorial. Next we reshape the images to a 28 pixel x 28 pixel grayscale image using
+
+```python
+def display_digit(digit):
+    plt.imshow(digit.reshape(28, 28), cmap="Greys", interpolation='nearest')
+```
+
+We then define the RNN as having 28 time-instances which is also the number of layers, 200 neurons per memory cell (tuneable hyperparameter), 10 outputs for the digits 0-9, and 28 inputs to each step, equal to the width of each row in our image. We structure the image array such that every row is one step in time.
+
+We then instantiate placeholders for the x and y-values of our image tensor. Next we set up the RNN. TensorFlow abstracts much of the RNN creation away from the user. Since we are working with relatively simple images, we set up a basic memory cell using
+
+```python
+basic_cell = tf.contrib.rnn.BasicRNNCell(num_units=28)
+```
+
+And we store the output and state of the previous memory cell using
+
+```python
+outputs, states = tf.nn.dynamic_rnn(basic_cell, X, dtype=tf.float32)
+```
+
+Since this is an image classification problem, we then set up the `logits` layer, a dense layer which has 10 outputs, and the input to which is the final state of the RNN. We then set up the cross-entropy and loss calculations, and the optimizer which is once again the Adam optimizer. The output of the cross-entropy is the predicted label with the highest probability.
+
+```python
+xentropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)
+
+loss = tf.reduce_mean(xentropy)
+
+optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
+
+training_op = optimizer.minimize(loss)
+```
+
+We initialize all of our variables and reshape the test digits using the helper method declared above. For our TensorFlow session, we set up 10 epochs of 150 images per iteration. We set up the feed dictionaries to pass all x and y-values into the optimizer, and the training and test accuracy is computed at each epoch.
