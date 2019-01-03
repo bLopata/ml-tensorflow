@@ -392,7 +392,13 @@ A layer within an RNN is generally a group of recurrent neurons, known as a RNN 
 
 ### Training an RNN
 
-Gradient descent optimizers, which seek to minimize the mean square error (MSE) for values of W and b, are used in RNNs as well. However, training of RNNs is accomplished through back-propagation through time (BPTT).
+Gradient descent optimizers, which seek to minimize the mean square error (MSE) for values of W and b, are used in RNNs as well. However, training of RNNs is accomplished through back-propagation through time (BPTT). BPTT is very similar to back-propagation, however BPTT has a few more details to consider as we unroll the RNN through time. The number of layers needed for an RNN depends on the number of time periods you wish to study. Because RNNs can be unrolled very far back in time, RNNs which rely upon time periods in the very distant past are especially prone to vanishing and exploding gradients as the gradient needs to be propagated back through each time instance.
+
+One option to mitigate vanishing and exploding gradients in RNNs is to use truncated BPTT. Truncated BPTT uses only a subset of data points for time periods in the very distant past which can reduce the accuracy of the model. Another option is to use long short-term memory (LTSM) cells. LTSM cells were developed specifically to deal with vanishing and exploding gradients.
+
+### Long Memory Neurons
+
+In order to combat the problems with vanishing and exploding gradients in deep recurrent neural networks, the state of a memory cell must be expanded to include long-term state.
 
 # Labs
 
@@ -589,7 +595,7 @@ And we store the output and state of the previous memory cell using
 outputs, states = tf.nn.dynamic_rnn(basic_cell, X, dtype=tf.float32)
 ```
 
-Since this is an image classification problem, we then set up the `logits` layer, a dense layer which has 10 outputs, and the input to which is the final state of the RNN. We then set up the cross-entropy and loss calculations, and the optimizer which is once again the Adam optimizer. The output of the cross-entropy is the predicted label with the highest probability.
+Since this is an image classification problem, we then set up the `logits` layer, a dense layer having 10 outputs, each a probability for the corresponding digit, and the input to which is the final state of the RNN. We then set up the cross-entropy and loss calculations, and the optimizer which is once again the Adam optimizer. The output of the cross-entropy is the predicted label with the highest probability.
 
 ```python
 xentropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits)
@@ -601,4 +607,4 @@ optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
 training_op = optimizer.minimize(loss)
 ```
 
-We initialize all of our variables and reshape the test digits using the helper method declared above. For our TensorFlow session, we set up 10 epochs of 150 images per iteration. We set up the feed dictionaries to pass all x and y-values into the optimizer, and the training and test accuracy is computed at each epoch.
+We initialize all of our variables and reshape the test digits using the helper method declared above. For our TensorFlow session, we set up 10 epochs of 150 images per iteration. We set up the feed dictionaries to pass all x and y-values into the optimizer, and the training and test accuracy is computed at each epoch. For this simple dataset, we were able to acheive training accuracy of >97% and test accuracy of >95%.
