@@ -416,7 +416,7 @@ RNNs are the ideal network for dealing with text data whether it be prediction s
 
 One-hot notation for text documents is performed by creating a set of all words across the corpus of data. Then each document in the dataset is checked against the corpus for each word. If the word exists in the document, then it receives a 1 for that word, if the word does not exist, it receives a 0. A feature vector comprised of occurances of each word is constructed. The length of the feature vectors is the length of the corpus, and the feature vector is used as an input to the neural network. Distances can be computed between any two feature vectors using simple geometry which will group similar documents together. One-hot notation has several drawbacks: for large datasets, the feature vectors become enormous and increase processing time substantially; also the order is lost when using one-hot notation as a cypher does not exist; also valuable information, such as frequency of occurances, is lost.
 
-TF-IDF
+TF-IDF tries to capture each words significance with respect to the document as well as the entire corpus of data. The value itself is calculated by multiplying the term frequency for a word within a document by the inverse of the frequency of that word within the entire corpus. I.e. the less frequently a term is used in the entire corpus, the higher the value.
 
 # Labs
 
