@@ -398,7 +398,25 @@ One option to mitigate vanishing and exploding gradients in RNNs is to use trunc
 
 ### Long Memory Neurons
 
-In order to combat the problems with vanishing and exploding gradients in deep recurrent neural networks, the state of a memory cell must be expanded to include long-term state.
+In order to combat the problems with vanishing and exploding gradients in deep recurrent neural networks, the state of a memory cell must be expanded to include long-term state. Long memory neurons, neurons that hold additional state for the distant past, have several advantages over recurrent neurons. In training, the gradients converge more easily and can be propagated faster through the layers leading to a convergent model more quickly. And for long memory neurons in prediction, the advantages are in not requiring truncating of inputs during the BPTT. Truncated BPTT can vastly decrease prediction performance as the output may be dependent upon the longer-term inputs which are removed by truncated BPTT.
+
+A long/short-term memory cell (LSTM) has several additional components over and above a basic RNN cell. The inputs to an LSTM cell are the basic input, X<sub>t</sub>, the short-term memory value, C<sub>t-1</sub>, and the long-term memory value, h<sub>t-1</sub>. Within the memory cell are components which choose which old memories are important and which should be forgotten, update short and long-term state, as well as calculate the output y<sub>t<sub>.
+
+![](./markdownImages/LSTM.png)
+
+These components are acheived using four distinct and fully-connected neural networks within the LSTM: the forget gate NN, the main NN, the input gate NN, and the output gate NN. Gates perform element-wise multiplication of two vectors. The forget gate looks at long-term memory and determines which memories from long-term memory should be included and which should be forgotten. The main gate works similarly to a basic RNN memory cell, with the distinction of storing a part of its output in long-term memory. The input and output gates determine which part of the long-term state should be included in the long-term memory and long-term state, respectively. In addition to these neural networks, the LSTM also has gate controllers which have logic for when to turn on all of these gates.
+
+![](./markdownImages/LSTM-NN.png)
+
+Some variants of LSTM cells are peephole connections, which are LSTM cells that store state for more than one period, and Gated Recurrent Unit (GRU) which are a simplified LSTM which stores only one state vector for both long and short-term memory. GRUs have fewer internal gates and NNs and acheive better performance over a basic LSTM cell.
+
+### Text as Sequential Data
+
+RNNs are the ideal network for dealing with text data whether it be prediction such as autocompleting a sentence, language translation, or text classification which can also be called natural language processing or sentiment analysis. RNNs are ideal for dealing with sequential data, but then the question is How can one represent text as sequential data in a meaningful manner. First we view the text document as an ordered sequence of words. Each individual word must be encoded as a number. To accomplish this, there are a number of text embeddings available: one-hot notation, text frequency inverse-document frequency (TF-IDF), and the most popular method word embeddings.
+
+One-hot notation for text documents is performed by creating a set of all words across the corpus of data. Then each document in the dataset is checked against the corpus for each word. If the word exists in the document, then it receives a 1 for that word, if the word does not exist, it receives a 0. A feature vector comprised of occurances of each word is constructed. The length of the feature vectors is the length of the corpus, and the feature vector is used as an input to the neural network. Distances can be computed between any two feature vectors using simple geometry which will group similar documents together. One-hot notation has several drawbacks: for large datasets, the feature vectors become enormous and increase processing time substantially; also the order is lost when using one-hot notation as a cypher does not exist; also valuable information, such as frequency of occurances, is lost.
+
+TF-IDF
 
 # Labs
 
