@@ -414,9 +414,11 @@ Some variants of LSTM cells are peephole connections, which are LSTM cells that 
 
 RNNs are the ideal network for dealing with text data whether it be prediction such as autocompleting a sentence, language translation, or text classification which can also be called natural language processing or sentiment analysis. RNNs are ideal for dealing with sequential data, but then the question is How can one represent text as sequential data in a meaningful manner. First we view the text document as an ordered sequence of words. Each individual word must be encoded as a number. To accomplish this, there are a number of text embeddings available: one-hot notation, text frequency inverse-document frequency (TF-IDF), and the most popular method word embeddings.
 
-One-hot notation for text documents is performed by creating a set of all words across the corpus of data. Then each document in the dataset is checked against the corpus for each word. If the word exists in the document, then it receives a 1 for that word, if the word does not exist, it receives a 0. A feature vector comprised of occurances of each word is constructed. The length of the feature vectors is the length of the corpus, and the feature vector is used as an input to the neural network. Distances can be computed between any two feature vectors using simple geometry which will group similar documents together. One-hot notation has several drawbacks: for large datasets, the feature vectors become enormous and increase processing time substantially; also the order is lost when using one-hot notation as a cypher does not exist; also valuable information, such as frequency of occurances, is lost.
+**One-hot notation** for text documents is performed by creating a set of all words across the corpus of data. Then each document in the dataset is checked against the corpus for each word. If the word exists in the document, then it receives a 1 for that word, if the word does not exist, it receives a 0. A feature vector comprised of occurances of each word is constructed. The length of the feature vectors is the length of the corpus, and the feature vector is used as an input to the neural network. Distances can be computed between any two feature vectors using simple geometry which will group similar documents together. One-hot notation has several drawbacks: for large datasets, the feature vectors become enormous and increase processing time substantially; also the order is lost when using one-hot notation as a cypher does not exist; also valuable information, such as frequency of occurances, is lost.
 
-TF-IDF tries to capture each words significance with respect to the document as well as the entire corpus of data. The value itself is calculated by multiplying the term frequency for a word within a document by the inverse of the frequency of that word within the entire corpus. I.e. the less frequently a term is used in the entire corpus, the higher the value.
+**TF-IDF** tries to capture each words significance with respect to the document as well as the entire corpus of data. The value itself is calculated by multiplying the term frequency for a word within a document by the inverse of the frequency of that word within the entire corpus. I.e. the less frequently a term is used in the entire corpus, the higher the value. The drawback of this method is that it loses the context or symantic relationship of the word within the document.
+
+**Word embeddings** are an ML-based algorithm which require training on a very large corpus of text data. Inputting a word to this classifier algorithm produces a low-dimensionality word embedding which is similar for two words which have a close relationship such as "London" and another city. Popular examples of word embedding models are Word2Vec which uses simple neural networks, GloVe - Global Vectors for Word Vectorization which uses word-to-word co-occurance matrix and nearest neighbors algorithm for word relationships.
 
 # Labs
 
@@ -626,3 +628,18 @@ training_op = optimizer.minimize(loss)
 ```
 
 We initialize all of our variables and reshape the test digits using the helper method declared above. For our TensorFlow session, we set up 10 epochs of 150 images per iteration. We set up the feed dictionaries to pass all x and y-values into the optimizer, and the training and test accuracy is computed at each epoch. For this simple dataset, we were able to acheive training accuracy of >97% and test accuracy of >95%.
+
+## Sentiment Analysis Using RNNs
+
+For this lab we are working with data from the movie review site rotten tomatoes hosted on cornell.edu. The problem we are solving is a sentiment analysis one where we are classifying reviews as either positive or negative. We first declare a couple of helper functions to get the reviews and the labels for the positive and negative reviews as well as combining the combined data and labels.
+
+We determine the maximum length in words of all the documents in the corpus and find that the longest review contains 61 words. This length needs to be normalized as the number of sequential data points must equal the number of layers in the RNN. We choose a length of 50 words per review as a baseline and truncate any reviews longer than 50 words while padding any reviews shorter than 50 words.
+
+The next step is to encode numeric representation to each word within the corpus of reviews. Each unique word in the entire dataset gets assigned an integer representation which can then be used to vectorize the text document as a series of integers. These vectors are then fed into the training process of the RNN to encode the unique id of each word as a vector of the same length. To accomplish this, we utilize the `VocabularyProcessor` within the TensorFlow library.
+
+```python
+MAX_SEQUENCE_LENGTH = 50
+vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(MAX_SEQUENCE_LENGTH)
+```
+
+This will assign a unique integer identifier to each word within the corpus. This assignment is then used in the numpy library to list all unique identifiers in an array.
