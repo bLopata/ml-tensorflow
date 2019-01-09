@@ -642,4 +642,62 @@ MAX_SEQUENCE_LENGTH = 50
 vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(MAX_SEQUENCE_LENGTH)
 ```
 
-This will assign a unique integer identifier to each word within the corpus. This assignment is then used in the numpy library to list all unique identifiers in an array.
+This will assign a unique integer identifier to each word within the corpus. This assignment is then used in the numpy library to list all unique identifiers in an array. We declare the `vocabulary_size` variable as the length of the `vocab_processor.vocabulary_` which returns `21097`. We use numpy to generate a random seed and choose a training data length of 9000 entries, with the remaining 1000 or so to be used as test data. We then declare `tf.placeholder(tf.int32, [None, MAX_SEQUENCE_LENGTH])` for our x and y placeholders and a `batch_size` of 25 with 50 layers in our RNN (`embedding_size = MAX_SEQUENCE_LENGTH`). For our word embedding, we define an `embedding_matrix = tf.Variable(tf.random_uniform([vocabular_size, embedding_size], -1.0, 1.0))` and `embeddings = tf.nn.embedding_lookup(embedding_matrix, x)`.
+
+Then we declare our LSTM cell using `lstmCell = tf.contrib.rnn.BasicLSTMCell(embedding_size)` which is an LSTM cell with 50 neurons per layer as well as declaring dropout to increase robustness and resilience in our RNN using `lstmCell = tf.contrib.rnn.DropoutWrapper(cell=lstmCell, output_keep_prob=0.75)` which means that, at each epoch, 25% of the neurons will be turned of randomly. This is performed to force the neural network to learn new patterns in the data.
+
+We then return the word encoding, which is the final state of the RNN, using `_, (encoding, _) = tf.nn.dynamic_rnn(lstmCell, embeddings, dtype=tf.float32)` as well as any extra information in the variable `_`. This method, `tf.dynamic_rnn()` accepts inputs in the shape (batch_size, num_steps, num_inputs) which matches the shape of our `embeddings` variable exactly. Next we declare a binary classifier ML-based algorithm in much the same way as previous labs, using a dense logits layer to generate probabilities as an input to a softmax activation function, a cross_entropy loss function to minimize using the AdamOptimizer, while calculating the accuracy using the actual and predicted labels.
+
+Our TensorFlow session is composed as follows:
+
+```python
+with tf.Session() as session:
+    init = tf.global_variables_intiializer()
+    init.run()
+
+    num_epochs = 20
+    for epoch in range(num_epochs):
+        num_batches = int(len(train_data) // batch_size) + 1
+
+        for i in range(num_bathces):
+            min_ix = i * batch_size
+            max_ix = np.min([len(train_data), ((i+1) * batch_size)])
+
+            x_train_batch = train_data[min_ix:max_ix]
+            y_train_batch = train_target[min_ix:max_ix]
+
+            train_dict = {x: x_train_batch, y: y_train_batch}
+            session.run(train_step, feed_dict=train_dict)
+
+            train_loss, train_acc = session.run([loss, accuracy], feed_dict=train_dict)
+
+        test_dict = {x: test_data, y: test_target}
+        test_loss, test_acc = session.run([loss, accuracy], feed_dict=test_dict)
+
+        print('Epoch: {}, Test Loss: {:.2}, Test Acc: {:.5}'.format(epoch + 1, test_loss, test_acc))
+```
+
+And the output of our RNN for 20 epochs is
+
+```python
+Epoch: 1, Test Loss: 0.69, Test Acc: 0.50301
+Epoch: 2, Test Loss: 0.7, Test Acc: 0.50301
+Epoch: 3, Test Loss: 0.69, Test Acc: 0.50301
+Epoch: 4, Test Loss: 0.69, Test Acc: 0.50301
+Epoch: 5, Test Loss: 0.69, Test Acc: 0.50301
+Epoch: 6, Test Loss: 0.69, Test Acc: 0.50301
+Epoch: 7, Test Loss: 0.64, Test Acc: 0.64079
+Epoch: 8, Test Loss: 0.63, Test Acc: 0.72022
+Epoch: 9, Test Loss: 0.82, Test Acc: 0.74729
+Epoch: 10, Test Loss: 1.0, Test Acc: 0.75993
+Epoch: 11, Test Loss: 1.4, Test Acc: 0.7509
+Epoch: 12, Test Loss: 1.3, Test Acc: 0.75331
+Epoch: 13, Test Loss: 1.7, Test Acc: 0.7485
+Epoch: 14, Test Loss: 1.7, Test Acc: 0.75451
+Epoch: 15, Test Loss: 1.8, Test Acc: 0.7497
+Epoch: 16, Test Loss: 1.9, Test Acc: 0.74248
+Epoch: 17, Test Loss: 1.8, Test Acc: 0.75211
+Epoch: 18, Test Loss: 1.9, Test Acc: 0.74489
+Epoch: 19, Test Loss: 2.0, Test Acc: 0.74489
+Epoch: 20, Test Loss: 2.1, Test Acc: 0.7503
+```
