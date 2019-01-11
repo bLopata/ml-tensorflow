@@ -420,6 +420,14 @@ RNNs are the ideal network for dealing with text data whether it be prediction s
 
 **Word embeddings** are an ML-based algorithm which require training on a very large corpus of text data. Inputting a word to this classifier algorithm produces a low-dimensionality word embedding which is similar for two words which have a close relationship such as "London" and another city. Popular examples of word embedding models are Word2Vec which uses simple neural networks, GloVe - Global Vectors for Word Vectorization which uses word-to-word co-occurance matrix and nearest neighbors algorithm for word relationships.
 
+## Supervised and Unsupervised Learning
+
+Thus far in the course, we have been conducting supervised machine learning, where labels associated with the data is provided and used to correct the algorithm during a training phase. Unsupervised learning does not include real labels or a testing phase. Unsupervised learning is performed by looking at the data and trying to find patterns within the data. These are known as "self-discovering" algorithms. Unsupervised models require precise and accurate setup to model the structure and similarities within the data. Two primary examples of unsupervised learning are clustering, or identifying patters in data items, and principal component analysis - also known as autoencoding or latent factor analysis - is where you seek to identify the latent factors that drive data.
+
+### Clustering Algorithms
+
+Clustering algorithms look within the data to determine commanalities within the data which can be used to group similar data items logically. To perform clustering on huge or complex datasets, we seek to represent attributes as numbers.
+
 # Labs
 
 ## Logistic Regression
