@@ -426,7 +426,7 @@ Thus far in the course, we have been conducting supervised machine learning, whe
 
 ### Clustering Algorithms
 
-Clustering algorithms look within the data to determine commanalities within the data which can be used to group similar data items logically. To perform clustering on huge or complex datasets, we seek to represent attributes as numbers.
+Clustering algorithms look within the data to determine commanalities within the data which can be used to group similar data items logically. To perform clustering on huge or complex datasets, we seek to represent attributes as numbers. This could be a product ID to represent a sale item on a website, height, weight, and age to represent people. The number of attributes defines the number of axis needed to plot each datapoint; i.e. for n attributes, you will need an n-dimensional hypercube. Clustering these numerical representations into similar groups for similar attributes and different groups for attributes which are dissimilar. Then the distances between two points in the n-dimensional space can represent the relative similarity or dissimilarity between those points. The goal of clustering is to minimize inter-cluster similiarity (similarity between two clusters), and maximize intra-cluster similiarity (similiarity between points in the same group).
 
 # Labs
 
