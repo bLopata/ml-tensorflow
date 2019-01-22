@@ -428,6 +428,18 @@ Thus far in the course, we have been conducting supervised machine learning, whe
 
 Clustering algorithms look within the data to determine commanalities within the data which can be used to group similar data items logically. To perform clustering on huge or complex datasets, we seek to represent attributes as numbers. This could be a product ID to represent a sale item on a website, height, weight, and age to represent people. The number of attributes defines the number of axis needed to plot each datapoint; i.e. for n attributes, you will need an n-dimensional hypercube. Clustering these numerical representations into similar groups for similar attributes and different groups for attributes which are dissimilar. Then the distances between two points in the n-dimensional space can represent the relative similarity or dissimilarity between those points. The goal of clustering is to minimize inter-cluster similiarity (similarity between two clusters), and maximize intra-cluster similiarity (similiarity between points in the same group).
 
+### K-Means Clustering
+
+Many clustering algorithms for grouping data exist, K-Means clustering is a popular example of a clustering algorithm. The objective of K-Means clustering is to determine k number of clusters for n number of data points and optimize the total reconstruction error. This is performed by assigning each cluster a centroid and computing the distance between each point to it's centroid. The mean of these distances is then computed, and the centroid is then moved to the position of this mean. Distances are then computed between each point and all centroids in order to facilitate points moving to a closer centroid. This process is then repeated iteratively until points no longer move to another cluster which indicates a convergent model. These centroids, also known as reference vectors, are then indicative of every data point within the cluster.
+
+#### Hyperparameters
+
+The number of clusters, k, is the primary hyperparameter for K-Means clustering. The value for k is determined by varying the number of clusters and computing the total reconstruction error for that model. Plotting the total reconstruction error against the value of k and analyzing the graph to find the "elbow" - that is the point at which the total reconstruction error drops dramatically.
+
+The initial values are the second hyperparameter for K-Means clustering. Randomly assigning initial values may impact model convergence and final values dramatically, so analysis of the underlying data could be performed to choose suitable initial values for the model.
+
+The third hyperparameter is the method for calculating distance. Euclidean, mahalanobis, and cosine distances are all options for computing distances each with their own drawbacks. For Euclidean distance, the centroid might not coincide with a datapoint. Mahalanobis distance requires normalizing each dimension to have equal variance.
+
 # Labs
 
 ## Logistic Regression
@@ -460,7 +472,7 @@ We tweaked the neural network configuration using the `hidden_units` parameter o
 
 For this lab, we are working with the iris data set. The objective of this ML model is to predict the label of the iris based on the features which are the Sepal length and width and petal length and width. Rather than using pandas for this lab, we are using TensorFlow to iterate over the .csv dataset by invoking `tf.decode_csv()` which extracts the header data from the .csv file. The features are created by zipping the feature names into a dictionary for each line in the iterator. We invoke `tf.data.TextLineDataset().map()` in our helper method `get_features_labels(filename, shuffle=False, repeat_count=1)` which allows for shuffling to randomize the order of the data, `repeat_count` allows for copying of the dataset, and we specify the `batch_size` as 32. We use the `dataset.make_one_shot_iterator()` method which iterates over the dataset exactly once.
 
-# Convolution Neural Network
+## Convolution Neural Network
 
 For this lab we are using the publicly available house number dataset from Stanford. The house numbers are in a matlab file format, which requires additional python libraries `scipy` and `scipy.io` to read in the files and `matplotlib` and `matplotlib.pyplot` which allows for inline plotting in IPythonNotebooks in addition to the usual numpy, pandas, and tensorflow libraries. Similar to the MNIST number lab, the goal is to create an ML-based classifier which can predict the number represented in an image. However, the shape of our image tensor is now (32, 32, 3) which is a larger, color image than the MNIST dataset.
 
