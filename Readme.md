@@ -721,3 +721,35 @@ Epoch: 18, Test Loss: 1.9, Test Acc: 0.74489
 Epoch: 19, Test Loss: 2.0, Test Acc: 0.74489
 Epoch: 20, Test Loss: 2.1, Test Acc: 0.7503
 ```
+
+### K-Means Clustering with 2-D points
+
+This lab is meant to demonstrate how K-Means clustering is performed. The dataset we use for this lab is generated using `np.array([[random.randint(1, 1000) for in in range(2)], dtype=np.float32)` for the first group, the following groups having index numbers 700 to 2000 and 1700 to 3000 respectively. The values for these data points can be seen in the image of the plot below.
+
+![](./markdownImages/kMeansPlot.png)
+
+Once the datapoints have been declared, we can import the necessary tensorflow libraries to perform clustering on this dataset `from tensorflow.contrib.learn.python.learn.estimators import kmeans` and `from tensorflow.contrib.factorization.python.ops import clustering_ops`. Our K-Means estimator can then be instantiated using `k_means_estimator = kmeans.KMeansClustering(num_clusters = 3)`. We perform training on this dataset using `fit = k_means_estimator.fit(input_fn=lambda: input_fn_2d(input_2d_x), steps=1000`. Here we are using a lambda function rather than a feed dictionary to pass in the x-values for 1000 data points to train the clustering algorithm. The location of our clusters after this training is complete is shown below:
+
+```python
+array([[2350.247  , 2326.4658 ],
+       [1426.1609 , 1353.4045 ],
+       [ 537.62305,  465.16745]], dtype=float32)
+```
+
+![](./markdownImages/kMeansCentroid.png)
+
+Several features of our K-Means clustering estimator were generated randomly, using `k_means_estimator.get_params()` which yields 
+```python
+{'params': {'distance_metric': 'squared_euclidean',
+  'kmeans_plus_plus_num_retries': 2,
+  'mini_batch_steps_per_iteration': 1,
+  'num_clusters': 3,
+  'random_seed': 0,
+  'relative_tolerance': None,
+  'training_initial_clusters': 'random',
+  'use_mini_batch': True}}
+```
+
+We then perform testing on this clustering algorithm to predict the cluster location for a given point such as [1700, 1700]. This returns cluster[1] which is the center-most cluster in the above plot.
+
+### K-Means Clustering with Images
