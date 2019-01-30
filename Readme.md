@@ -738,7 +738,8 @@ array([[2350.247  , 2326.4658 ],
 
 ![](./markdownImages/kMeansCentroid.png)
 
-Several features of our K-Means clustering estimator were generated randomly, using `k_means_estimator.get_params()` which yields 
+Several features of our K-Means clustering estimator were generated randomly, using `k_means_estimator.get_params()` which yields
+
 ```python
 {'params': {'distance_metric': 'squared_euclidean',
   'kmeans_plus_plus_num_retries': 2,
@@ -753,3 +754,40 @@ Several features of our K-Means clustering estimator were generated randomly, us
 We then perform testing on this clustering algorithm to predict the cluster location for a given point such as [1700, 1700]. This returns cluster[1] which is the center-most cluster in the above plot.
 
 ### K-Means Clustering with Images
+
+This lab once again uses the MNIST handwritten data set to test prediction accuracy using K-Means clustering with an image-based dataset. We begin by downloading the MNIST dataset and declare batches for the training as well as the test data. We then set up our clustering algorithm once again using `k_means_estimator = kmeans.KMeansClustering(num_clusters=10)`. We again use a lambda function to feed the training digits into the estimator defined in the previous line `fit = k_means_estimator.fit(input_fn=lambda: input_fn(training_digits), steps=1000)`. Once this k-means clustering completes, we can return `clusters = k_means_estimator.clusters()` which will return the cluster centers. These cluster centers are themselves 28 pixel x 28 pixel images and do not need to lie upon an actual datapoint. We then plot these images using `matplotlib` and interpret the shown digit to assign a label to each cluster center image.
+
+After manually assigning a label to our cluster centers, we can test against a 5-image set to determine how accurate our predictions are.
+
+```python
+predict = k_means_estimator.predict(input_fn=lambda: input_fn(test_digits), as_iterable=False)
+predict
+
+{'all_scores': array([[ 67.4597  ,  46.26973 ,  77.094315,  57.033348,  54.18168 ,
+          76.560005,  40.806614,  56.557056,  53.94852 ,  46.94289 ],
+        [ 71.997894,  50.974876,  95.28452 ,  74.77273 ,  81.152695,
+         108.98702 ,  70.37898 , 106.51332 ,  91.22705 ,  77.53729 ],
+        [ 57.259624,  43.007652,  64.09751 ,  17.623543,  58.123383,
+          89.30611 ,  49.368084,  45.973774,  51.63876 ,  34.964462],
+        [ 69.02482 ,  23.615406,  66.084335,  42.56751 ,  63.07305 ,
+          91.81513 ,  44.027496,  63.709976,  57.39492 ,  48.173595],
+        [ 87.773285,  61.796906,  81.67493 ,  93.692604,  48.048866,
+         103.05348 ,  83.772354,  96.52457 ,  89.80249 ,  74.56091 ]],
+       dtype=float32), 'cluster_idx': array([6, 1, 3, 1, 4], dtype=int64)}
+```
+
+We similarly set up a `predict_train` variable with the same value as `predict` and set up the following helper function for displaying the accuracy of our prediction model after running K-Means clustering:
+
+```python
+def display_accuracy(cluster_labels, cluster_idx, actual_labels):
+    predict_labels = [cluster_labels[i] for i in cluster_idx]
+
+    num_accurate_predictions = (list(predict_labels == actual_labels)).count(True)
+
+    print("Number of accurate predictions: ", num_accurate_predictions)
+
+    pctAccuracy = float(num_accurate_predictions) / float(len(actual_labels))
+
+    print ("% accurate predictions: ", pctAccuracy)
+```
+
