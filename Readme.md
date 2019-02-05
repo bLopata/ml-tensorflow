@@ -440,6 +440,22 @@ The initial values are the second hyperparameter for K-Means clustering. Randoml
 
 The third hyperparameter is the method for calculating distance. Euclidean, mahalanobis, and cosine distances are all options for computing distances each with their own drawbacks. For Euclidean distance, the centroid might not coincide with a datapoint. Mahalanobis distance requires normalizing each dimension to have equal variance.
 
+## Autoencoders
+
+Autoencoders seek to find patterns within data to memorize and recall data using a more compact representation. Principal components analysis is a statistical method for reducing the number of dimensions needed to accurately represent a dataset. The first principal component is performed by projecting all datapoints onto a single axis. The greater the distance between the points, the better the projection. The second principal component is orthoganal to the first principal component and, by definition, has less distance between the datapoints when compared with the first principal component. Consider a matrix, X, of datapoints contained within k columns by n rows. The goal is to reduce this data into it's principal components using PCA Factor Reduction. After performing PCA, we obtain k rows by n columns of another matrix, F. However the data columns, F<sub>i</sub> for i in k, after performing PCA are highly uncorrelated. F<sub>1</sub> and F<sub>2</sub> contain the vast majority of total variance contained within the original data.
+
+![](./markdownImages/pcaDimensionReduction.png)
+
+Reconstructing the original data from the principal components is performed by multiplying the principal component matrix by a k x k weight vector which is generated during principal component analysis.
+
+Autoencoders in machine learning are neural networks that learn efficient representation using PCAs. Autoencoders attempt to recreate the input at the output by performing an unsupervised version of supervised learning, that is optimizing a cost function, without the input labels afforded to supervised learning. Autoencoders attempt to uncover latent factors L which drive the data. Unsupervised learning is often a preparatory step before using a supervised learning algorithm.
+
+### Autoencoders Neural Network Architecture
+
+As described before, autoencoders are the ultimate "look-within" unsupervised ML technique which try to reconstruct the input at the output. Since the goal is to reproduce the input, the auto-encoder must be designed such that the output layer is an exact duplicate of the input layer. The trivial solution is a single layer where the input passes directly to the output. This neural network succeeds in "reproducing" the input, but the NN does not learn anything. An undercomplete autoencoder has a smaller, hidden layer - also called a coding layer - sandwiched between the input and output layer. The output produced, while ideally will be an exact copy of the input, will likely have some error, e.
+
+Design choices for an autoencoder NN are the activation function to the neurons within the hidden layer, as well as the cost function to optimize during training. Principal components analysis are autoencoders without an activation function on hidden layer neurons (that is, linear neurons) and designed to minimize the mean-square error. 
+
 # Labs
 
 ## Logistic Regression
