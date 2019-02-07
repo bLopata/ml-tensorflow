@@ -738,7 +738,7 @@ Epoch: 19, Test Loss: 2.0, Test Acc: 0.74489
 Epoch: 20, Test Loss: 2.1, Test Acc: 0.7503
 ```
 
-### K-Means Clustering with 2-D points
+## K-Means Clustering with 2-D points
 
 This lab is meant to demonstrate how K-Means clustering is performed. The dataset we use for this lab is generated using `np.array([[random.randint(1, 1000) for in in range(2)], dtype=np.float32)` for the first group, the following groups having index numbers 700 to 2000 and 1700 to 3000 respectively. The values for these data points can be seen in the image of the plot below.
 
@@ -769,7 +769,7 @@ Several features of our K-Means clustering estimator were generated randomly, us
 
 We then perform testing on this clustering algorithm to predict the cluster location for a given point such as [1700, 1700]. This returns cluster[1] which is the center-most cluster in the above plot.
 
-### K-Means Clustering with Images
+## K-Means Clustering with Images
 
 This lab once again uses the MNIST handwritten data set to test prediction accuracy using K-Means clustering with an image-based dataset. We begin by downloading the MNIST dataset and declare batches for the training as well as the test data. We then set up our clustering algorithm once again using `k_means_estimator = kmeans.KMeansClustering(num_clusters=10)`. We again use a lambda function to feed the training digits into the estimator defined in the previous line `fit = k_means_estimator.fit(input_fn=lambda: input_fn(training_digits), steps=1000)`. Once this k-means clustering completes, we can return `clusters = k_means_estimator.clusters()` which will return the cluster centers. These cluster centers are themselves 28 pixel x 28 pixel images and do not need to lie upon an actual datapoint. We then plot these images using `matplotlib` and interpret the shown digit to assign a label to each cluster center image.
 
@@ -807,3 +807,42 @@ def display_accuracy(cluster_labels, cluster_idx, actual_labels):
     print ("% accurate predictions: ", pctAccuracy)
 ```
 
+## Principal Component Analysis
+
+For this lab we are performing PCA on stock market data. We import the necessary modules, tensorflow, pandas, numpy, and matplotlib. Next we read in the stock data csv file using pandas into a dataframe called `prices` and format the 'Date' column from 'DD-MMM-YY' format to a string 'YYYY-MM-DD' and sort by that date. We also use trim the dataframe to use only three stocks instead of the six included in the file originally. Next we calculate the returns on our three chosen stocks using the following command which iterates over the datatypes contained in the dataframe and calculates the percent change from the previous entry if the value is an integer or a float.
+
+```python
+returns = prices[[key for key in dict(prices.dtypes) \
+    if dict(prices.dtypes)[key] in ['float64', 'int64']]].pct_change()
+```
+
+Next we `import StandardScaler` from the `sklearn.preprocessing` library in order to normalize and scale our `returns` so that it is centered around zero.
+
+```python
+scaler = StandardScaler()
+
+returns_arr_scaled = scaler.fit_transform(returns_arr)
+```
+
+array([[-1.3815757 , -1.66841975, -0.00794824],
+       [ 0.93127707, -0.06227426,  0.79937034],
+       [ 0.47533596,  1.02993615, -0.20935564],
+       [-0.59506817,  0.15850482,  0.76461402],
+       [-0.91335326,  0.87614265, -1.51877095],
+       [ 0.96462026, -1.39059372, -0.10439707],
+       [ 1.24532886, -0.44852127,  0.7784667 ],
+       [-0.20090235,  1.56355606,  0.16856723],
+       [ 0.99212851, -0.65272298,  1.33141124],
+       [-1.51779118,  0.59439231, -2.00195763]])
+
+Next we perform principal components analysis on this normalized and scaled data using:
+
+```python
+results = PCA(returns_arr_scaled, standardize=False)
+```
+
+Showing `results.fracs` shows the percent variance represented by each individual principal component. In our case we obtain `array([0.6498785 , 0.29691799, 0.05320351])` or ~64.9% variance captured by the first principal component, ~29.6% by the second, and ~5.3% by the third. `results.Y` will show the principal components themselves, and `results.Wt` shows the weight vector matrix which can be used to project the initial vector into PCA space. Taking the dot product of `results.Wt` and `results.Y` will reconstruct the original data.
+
+# Jupyter Notebook Tips
+
+[This website](https://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/) contains very useful information for installing packages within the jupyter notebook environment.
