@@ -843,6 +843,34 @@ results = PCA(returns_arr_scaled, standardize=False)
 
 Showing `results.fracs` shows the percent variance represented by each individual principal component. In our case we obtain `array([0.6498785 , 0.29691799, 0.05320351])` or ~64.9% variance captured by the first principal component, ~29.6% by the second, and ~5.3% by the third. `results.Y` will show the principal components themselves, and `results.Wt` shows the weight vector matrix which can be used to project the initial vector into PCA space. Taking the dot product of `results.Wt` and `results.Y` will reconstruct the original data.
 
+Constructing the neural network is fairly trivial. We define `n_inputs = 3` for our three inputs. We also define `n_hidden = 2` for our 2 hidden layer neurons (n_inputs - 1) and the number of outputs is equal to the number of inputs (3). We define the placeholder for the X values and define a dense NN for the hidden layer as well as set up the Adam optimizer and have it minimize the `reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))` and use the `tf.global_variables_initialzer()` before starting our `tf.Session()` as is typical. Comparing the output of our trained NN against the actual result shows how closely we were able to reproduce the input using PCA.
+
+```python
+# Output
+[[-0.98150289 -1.77904904 -0.44743055]
+ [ 0.90408623 -0.05467882  0.83026832]
+ [ 0.28890061  1.08167148 -0.00606127]
+ [ 0.05027498 -0.0179458   0.04986156]
+ [-1.14511693  0.93994194 -1.26656651]
+ [ 0.33134007 -1.21805727  0.60008794]
+ [ 1.0261507  -0.38860524  1.02298927]
+ [ 0.15135062  1.46818554 -0.22575612]
+ [ 1.12529922 -0.6893332   1.18681109]
+ [-1.75277281  0.6587956  -1.74611008]]
+
+ # Input
+ array([[-0.98310396, -1.77738749, -0.44903258],
+       [ 0.90369053, -0.05473033,  0.82990699],
+       [ 0.29037459,  1.08051646, -0.00461448],
+       [ 0.05046729, -0.01802601,  0.05004494],
+       [-1.14301362,  0.93894653, -1.2645507 ],
+       [ 0.32966536, -1.21695631,  0.59845995],
+       [ 1.02522209, -0.38832995,  1.0221117 ],
+       [ 0.15346185,  1.46665014, -0.2236927 ],
+       [ 1.12393484, -0.68876729,  1.18550953],
+       [-1.75069897,  0.65808424, -1.74414266]])
+```
+
 # Jupyter Notebook Tips
 
 [This website](https://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/) contains very useful information for installing packages within the jupyter notebook environment.
