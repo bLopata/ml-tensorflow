@@ -440,9 +440,9 @@ The initial values are the second hyperparameter for K-Means clustering. Randoml
 
 The third hyperparameter is the method for calculating distance. Euclidean, mahalanobis, and cosine distances are all options for computing distances each with their own drawbacks. For Euclidean distance, the centroid might not coincide with a datapoint. Mahalanobis distance requires normalizing each dimension to have equal variance.
 
-## Autoencoders
+## Autoencoders and Principal Components Analysis
 
-Autoencoders seek to find patterns within data to memorize and recall data using a more compact representation. Principal components analysis is a statistical method for reducing the number of dimensions needed to accurately represent a dataset. The first principal component is performed by projecting all datapoints onto a single axis. The greater the distance between the points, the better the projection. The second principal component is orthoganal to the first principal component and, by definition, has less distance between the datapoints when compared with the first principal component. Consider a matrix, X, of datapoints contained within k columns by n rows. The goal is to reduce this data into it's principal components using PCA Factor Reduction. After performing PCA, we obtain k rows by n columns of another matrix, F. However the data columns, F<sub>i</sub> for i in k, after performing PCA are highly uncorrelated. F<sub>1</sub> and F<sub>2</sub> contain the vast majority of total variance contained within the original data.
+Principal components analysis is a statistical method for reducing the number of dimensions needed to accurately represent a dataset. The first principal component is performed by projecting all datapoints onto a single axis. The greater the distance between the points, the better the projection. The second principal component is orthoganal to the first principal component and, by definition, has less distance between the datapoints when compared with the first principal component. Consider a matrix, X, of datapoints contained within k columns by n rows. The goal is to reduce this data into it's principal components using PCA Factor Reduction. After performing PCA, we obtain k rows by n columns of another matrix, F. However the data columns, F<sub>i</sub> for i in k, after performing PCA are highly uncorrelated. F<sub>1</sub> and F<sub>2</sub> contain the vast majority of total variance contained within the original data.
 
 ![](./markdownImages/pcaDimensionReduction.png)
 
@@ -454,7 +454,15 @@ Autoencoders in machine learning are neural networks that learn efficient repres
 
 As described before, autoencoders are the ultimate "look-within" unsupervised ML technique which try to reconstruct the input at the output. Since the goal is to reproduce the input, the auto-encoder must be designed such that the output layer is an exact duplicate of the input layer. The trivial solution is a single layer where the input passes directly to the output. This neural network succeeds in "reproducing" the input, but the NN does not learn anything. An undercomplete autoencoder has a smaller, hidden layer - also called a coding layer - sandwiched between the input and output layer. The output produced, while ideally will be an exact copy of the input, will likely have some error, e.
 
-Design choices for an autoencoder NN are the activation function to the neurons within the hidden layer, as well as the cost function to optimize during training. Principal components analysis are autoencoders without an activation function on hidden layer neurons (that is, linear neurons) and designed to minimize the mean-square error. 
+Design choices for an autoencoder NN are the activation function to the neurons within the hidden layer, as well as the cost function to optimize during training. Principal components analysis are autoencoders without an activation function on hidden layer neurons (that is, linear neurons) and designed to minimize the mean-square error.
+
+### Stacked Autoencoders
+
+Autoencoders, as stated earlier, are used as a pre-training step before performing supervised learning to find hidden patterns in the training data. Adding more hidden layers to an autoencoder NN, or "stacking" the autoencoders, will result in a stronger or more robust autoencoder NN which is capable of learning more complex patterns in data. The center hidden layer remains the smallest (having the fewest neurons) with increasingly large, symmetrical layers as you move out from the center. Overfitting the data is a very serious concern with stacked autoencoders. "Tying" the weights and biases of symmetric hidden layers (layers 1 and 3 in the below image)to be the same is one method to combat stacked autoencoders overfitting the data. Another method is to train each hidden layer separately.
+
+![](./markdownImages/stackedAutoencoders.png)
+
+###
 
 # Labs
 
@@ -825,15 +833,15 @@ returns_arr_scaled = scaler.fit_transform(returns_arr)
 ```
 
 array([[-1.3815757 , -1.66841975, -0.00794824],
-       [ 0.93127707, -0.06227426,  0.79937034],
-       [ 0.47533596,  1.02993615, -0.20935564],
-       [-0.59506817,  0.15850482,  0.76461402],
-       [-0.91335326,  0.87614265, -1.51877095],
-       [ 0.96462026, -1.39059372, -0.10439707],
-       [ 1.24532886, -0.44852127,  0.7784667 ],
-       [-0.20090235,  1.56355606,  0.16856723],
-       [ 0.99212851, -0.65272298,  1.33141124],
-       [-1.51779118,  0.59439231, -2.00195763]])
+[ 0.93127707, -0.06227426, 0.79937034],
+[ 0.47533596, 1.02993615, -0.20935564],
+[-0.59506817, 0.15850482, 0.76461402],
+[-0.91335326, 0.87614265, -1.51877095],
+[ 0.96462026, -1.39059372, -0.10439707],
+[ 1.24532886, -0.44852127, 0.7784667 ],
+[-0.20090235, 1.56355606, 0.16856723],
+[ 0.99212851, -0.65272298, 1.33141124],
+[-1.51779118, 0.59439231, -2.00195763]])
 
 Next we perform principal components analysis on this normalized and scaled data using:
 
@@ -859,17 +867,42 @@ Constructing the neural network is fairly trivial. We define `n_inputs = 3` for 
  [-1.75277281  0.6587956  -1.74611008]]
 
  # Input
- array([[-0.98310396, -1.77738749, -0.44903258],
-       [ 0.90369053, -0.05473033,  0.82990699],
-       [ 0.29037459,  1.08051646, -0.00461448],
-       [ 0.05046729, -0.01802601,  0.05004494],
-       [-1.14301362,  0.93894653, -1.2645507 ],
-       [ 0.32966536, -1.21695631,  0.59845995],
-       [ 1.02522209, -0.38832995,  1.0221117 ],
-       [ 0.15346185,  1.46665014, -0.2236927 ],
-       [ 1.12393484, -0.68876729,  1.18550953],
-       [-1.75069897,  0.65808424, -1.74414266]])
+ [[-0.98310396, -1.77738749, -0.44903258],
+ [ 0.90369053, -0.05473033,  0.82990699],
+ [ 0.29037459,  1.08051646, -0.00461448],
+ [ 0.05046729, -0.01802601,  0.05004494],
+ [-1.14301362,  0.93894653, -1.2645507 ],
+ [ 0.32966536, -1.21695631,  0.59845995],
+ [ 1.02522209, -0.38832995,  1.0221117 ],
+ [ 0.15346185,  1.46665014, -0.2236927 ],
+ [ 1.12393484, -0.68876729,  1.18550953],
+ [-1.75069897,  0.65808424, -1.74414266]]
 ```
+
+## Stacked Autoencoder Lab
+
+For this lab, we are attempting to recreate our input data, which is the MNIST handwritten dataset, by using stacked autoencoders using dropout to prevent overfitting to the data. Our imports are identical to previous labs, TensorFlow, numpy, matplotlib and the MNIST dataset itself. We again create the `display_digit(digit)` helper function which uses matplotlib to visually display a single digit on screen. We also write a helper function to reconstruct the output, `outputs`, for a given input `X` and display the original image and the output side-by-side. This method is used to test how well our autoencoder reproduces the input without training labels to quickly test as in previous labs.
+
+```python
+show_reconstructed_digits(X, outputs, model_path = None)
+    with tf.Session() as sess:
+        if modeL_path:
+            saver.restore(sess, model_path)
+
+        X_test = mnist.test.images[100 : 102]
+        outputs_val = outputs.eval(feed_dict={X: X_test})
+
+    fig = plt.figure(figsize=(8, 6))
+
+    for i in range(2)
+        plt.subplot(2, 2, i * 2 + 1)
+        display_digit(X_test[i])
+
+        plt.subplot(2, 2, i * 2 + 2)
+        display_digit(outputs_val[i])
+```
+
+We then construct our stacked autoencoder neural network with three hidden layers.
 
 # Jupyter Notebook Tips
 
