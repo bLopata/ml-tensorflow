@@ -902,7 +902,93 @@ show_reconstructed_digits(X, outputs, model_path = None)
         display_digit(outputs_val[i])
 ```
 
-We then construct our stacked autoencoder neural network with three hidden layers.
+We then construct our stacked autoencoder neural network with three hidden layers, with the center layer having 150 neurons, and the outer two layers having 300 neurons each. We define our output and input layers to have 28<sup>2</sup> neurons, equal to the dimensionality of our input data (28, 28, 1). 
+
+```python
+
+n_inputs = 28 * 28
+n_hidden1 = 300
+n_hidden2 = 150  # codings
+n_hidden3 = n_hidden1
+n_outputs = n_inputs
+```
+
+We also define a placeholder which is a 1-D array representing a single MNIST image. As stated, we will be using dropout to prevent overfitting to the training data. We specify a dropout rate of 0.3, and implement the dropout:
+
+```python
+X = tf.placeholder(tf.float32, shape=[None, n_inputs])
+
+dropout_rate = 0.3
+
+X_drop = tf.layers.dropout(X, dropout_rate, training=training)
+```
+
+After defining the dropout and inputs, we generate our dense hidden layers as shown:
+
+
+```python
+from functools import partial
+
+dense_layer = partial(tf.layers.dense, activation=tf.nn.relu)
+
+hidden1 = dense_layer(X_drop, n_hidden1)
+hidden2 = dense_layer(hidden1, n_hidden2)
+hidden3 = dense_layer(hidden2, n_hidden3)
+
+outputs = dense_layer(hidden3, n_outputs, activation=None)
+```
+
+As before, after we set up our parameters and inputs, we then set up our optimizer, loss function, variable initializer, as well as Saver which saves and restores variables, and our training parameters of the number of epochs and batch size to use during training.
+
+```python
+optimizer = tf.train.AdamOptimizer(0.01)
+reconstruction_loss = tf.reduce_mean(tf.square(outputs - X))
+training_op = optimizer.minimize(reconstruction_loss)
+
+init = tf.global_variables_initializer()
+saver = tf.train.Saver()
+
+n_epocs = 12
+batch_size = 100
+```
+
+The code used by our `tf.Session()` is:
+```python
+with tf.Sessio() as sess:
+    init.run()
+
+    for epoch in range(n_epochs):
+        n_batches = mnist.train.num_examples
+
+        for iteration in range(n_batches):
+            X_batch, _ = mnist.train.next_batch(batch_size)
+
+            sess.run(training_op, feed_dict={X: X_batch, training: True})
+
+        loss_train = reconstruction_loss.eval(feed_dict={X: X_batch})
+
+        print("\r{}".format(epoch), "Train MSE: ", loss_train)
+
+        saver.save(sess, "./dropout_autoencoder.ckpt")
+```
+
+Which obtains an output of:
+```python
+0 Train MSE: 0.0286239
+1 Train MSE: 0.025357436
+2 Train MSE: 0.02442279
+3 Train MSE: 0.025716659
+4 Train MSE: 0.023876568
+5 Train MSE: 0.024823122
+6 Train MSE: 0.025949666
+7 Train MSE: 0.023676606
+8 Train MSE: 0.024649201
+9 Train MSE: 0.024720035
+10 Train MSE: 0.02605723
+11 Train MSE: 0.025617352
+```
+
+Displaying our input image against our output digit using our `show_reconstructed_digits()` helper function shows how the NN modifies the image from input to output, and can show how dropout affects our final output.
 
 # Jupyter Notebook Tips
 
