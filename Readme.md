@@ -462,6 +462,10 @@ Autoencoders, as stated earlier, are used as a pre-training step before performi
 
 ![](./markdownImages/stackedAutoencoders.png)
 
+### Denoising Autoencoders
+
+This tool is intended to test an autoencoders efficacy as it is required to discern the signal from the random noise which we add to the input signal. Since the input to the autoencoder and the output are not 1:1, the autoencoder cannot just simply copy over the input signal to acheive the correct result.
+
 ###
 
 # Labs
@@ -989,6 +993,10 @@ Which obtains an output of:
 ```
 
 Displaying our input image against our output digit using our `show_reconstructed_digits()` helper function shows how the NN modifies the image from input to output, and can show how dropout affects our final output.
+
+## GCP Taxicab Prediction Lab
+
+This lab utilizes `nyc-tlc:green.trips_2015`, a dataset freely available from Google which contains a great deal of information on NYC taxi cab rides during 2015. Rather than running this code on jupyter notebooks as done in previous labs, we will be using Google Cloud Platform (GCP) for a more real-world TF experience. 
 
 # Jupyter Notebook Tips
 
