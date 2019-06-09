@@ -74,12 +74,7 @@ Analysis of a computation graph for two distinct nodes, which contain no overlap
 
 ## Tensors
 
-The rank of a tensor is an integer. A scalar, for example, is rank 0.
-
-The two steps in a TensorFlow program are:
-
-- building a graph
-- running a graph
+The "rank", also "order", of a tensor defines it's dimensionality. The order is a zero-indexed integer value, thus a scalar value is a tensor of rank 0.
 
 Tensors connect nodes in a computation graph. A tensor is the central unit of data in TensorFlow. A tensor consists of a set of primitive values shaped into an array of any number of dimensions.
 
