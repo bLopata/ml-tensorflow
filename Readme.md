@@ -901,7 +901,7 @@ show_reconstructed_digits(X, outputs, model_path = None)
         display_digit(outputs_val[i])
 ```
 
-We then construct our stacked autoencoder neural network with three hidden layers, with the center layer having 150 neurons, and the outer two layers having 300 neurons each. We define our output and input layers to have 28<sup>2</sup> neurons, equal to the dimensionality of our input data (28, 28, 1). 
+We then construct our stacked autoencoder neural network with three hidden layers, with the center layer having 150 neurons, and the outer two layers having 300 neurons each. We define our output and input layers to have 28<sup>2</sup> neurons, equal to the dimensionality of our input data (28, 28, 1).
 
 ```python
 
@@ -923,7 +923,6 @@ X_drop = tf.layers.dropout(X, dropout_rate, training=training)
 ```
 
 After defining the dropout and inputs, we generate our dense hidden layers as shown:
-
 
 ```python
 from functools import partial
@@ -952,6 +951,7 @@ batch_size = 100
 ```
 
 The code used by our `tf.Session()` is:
+
 ```python
 with tf.Sessio() as sess:
     init.run()
@@ -972,6 +972,7 @@ with tf.Sessio() as sess:
 ```
 
 Which obtains an output of:
+
 ```python
 0 Train MSE: 0.0286239
 1 Train MSE: 0.025357436
@@ -991,7 +992,39 @@ Displaying our input image against our output digit using our `show_reconstructe
 
 ## GCP Taxicab Prediction Lab
 
-This lab utilizes `nyc-tlc:green.trips_2015`, a dataset freely available from Google which contains a great deal of information on NYC taxi cab rides during 2015. Rather than running this code on jupyter notebooks as done in previous labs, we will be using Google Cloud Platform (GCP) for a more real-world TF experience. 
+This lab utilizes `nyc-tlc:green.trips_2015`, a dataset freely available from Google which contains a great deal of information on NYC taxi cab rides during 2015. Rather than running this code on jupyter notebooks as done in previous labs, we will be using Google Cloud Platform (GCP) for a more real-world TF experience.
+
+After importing pandas, bigquery, and numpy, we view the schema of the data in Jupyter Notebook by using
+
+```python
+%bigquery schema --table "nyc-tlc:green.trips_2015"
+```
+
+We then create a query `taxiquery` using `%bq query -n taxiquery` and parameterize the year by using `@YEAR` and providing the required year in a query parameter, which is a dictionary object with a corresponding name, value type, and value.
+
+We then execute the query and output the first 5 rows using
+
+```python
+[In]: trips = taxiquery.execute(query_params=query_parameters).result().to_dataframe()
+trips[:5]
+
+[Out]:
+daynumber	numtrips
+0	1	62943
+1	2	43410
+2	3	53866
+3	4	41602
+4	5	41923
+
+```
+
+Benchmarking this result can be conducted by using the average and the root mean square error (RSME) which computes an average of 54,674 and an RSME of 10163, which is very high.
+
+We wish to then correspond the taxi ride data with the daily temperature and precipitation data to formulate a hypothesis linking the two.
+
+First we query the `fh-bigquery.weather_gsod.stations` for a station name `LIKE '%LA GUARDIA%'` and create a weather query `%bq query -n wxquery` which also parameterizes the `@YEAR` and execute using a dictionary for the `query_parameters` as above.
+
+We then call `pd.merge(weather, trips, on='daynumber')` to join the two result tables. And also generate plots to visually inspect the correlation between two chosen variables. `data.plot(kind='scatter', x='maxtemp', y='numtrips')` plots the number of trips against the temperature, which does not provide any valuable insights, however plotting the number of trips for each day of the week shows a much more striking correlation.
 
 # Jupyter Notebook Tips
 
