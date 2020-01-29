@@ -1,3 +1,7 @@
+[_metadata_:author]: - "benlopata"
+[_metadata_:style]: - "blopata.github.io/assets/css/darkdownstyle.css"
+[_metadata_:tags]: - "python, tensorflow, tf, machine learning, ML"
+
 # Introduction
 
 ## Main Types of machine learning
@@ -13,8 +17,6 @@ ML-based classifiers differ from traditional "rule-based" classifiers in that:
 - ML-based classifiers require a corpus of data while rule-based classifiers do not.
 
 **Feature vectors** are the attributes that the ML algorithm focuses on. Each data point is a list, or vector, of features. In a traditional classifier, the experts determine which features to pay attention to.
-
-<a name="neural-networks"></a>
 
 ### Regression
 
@@ -36,17 +38,17 @@ Determining implicit rules, or correlational relationships, within the input dat
 
 A neural network is a deep learning representation classification system. A deep learning system is one which decides it's feature vector in part or in whole independently. A deep learning-based binary classifier (seen in below image) requires a corupus of data, a feature selection & classification algorithm which contains multiple neural layers comprised of neurons. The neural layers which interact with the images directly (the Pixels and Object Parts layer which take in the image and output the image to the ML-based classifier in the example) are called visible layers, while the others are known as hidden layers.
 
-![](./markdownImages/neuralNetwork.png)
+![neuralNetwork](./markdownImages/neuralNetwork.png)
 
 The interaction of the individual neural layers and the neurons themselves can be seen in the following image.
 
-![](./markdownImages/neurons.png)
+![neurons](./markdownImages/neurons.png)
 
 The difficulty in designing a neural network is in choosing which features to map and how to architect and implement those designs.
 
 The network contains complex interconnects between simple neurons. Different configurations lend themselves to different applications; for example a convolutional neural network would be used for image processing, while text or natural language processing applications would use a recurrent neural network. The difference between these are the interconnections between the neurons. The neurons themselves perform only two simple functions to its specific inputs: affine transformation (Wx+b) which is simply a weighted sum with a bias added, and activation function (ReLU, SoftMax, etc).
 
-![](./markdownImages/affineTransformation.png)
+![affineTransformation](./markdownImages/affineTransformation.png)
 
 The values of W and b, which are variables, are determined by TensorFlow in the training process. The objective of the training process is to determine the optimal values of W and b for each neuron. This is accomplished using the cost function, the optimizer, and run for a set number of iterations, all which are specified by the developer. During the training process, outputs from the deeper layers must be fed back to the earlier layers to determine the optimal values, this is known as back propogation. The activation function, the second step of the neuron-level operation, allows neural networks to perform linear or non-linear transformations.
 
@@ -56,19 +58,19 @@ The values of W and b, which are variables, are determined by TensorFlow in the 
 
 A computation graph, is a directed, acyclic representation of a TensorFlow algorithm. The tensors, the arrows in the graph, flow strictly from left to right and are modified by the nodes within the graph.
 
-![](./markdownImages/computationGraph.png)
+![computationGraph](./markdownImages/computationGraph.png)
 
 The connections to the left of a node are known as the direct or indirect dependencies.
 
-![](./markdownImages/computationGraphDependencies.png)
+![computationGraphDependencies](./markdownImages/computationGraphDependencies.png)
 
 The result of the computation graph has the loss calculated, which is then fed back in to the neural network. This feedback loop can be visualized using either the neural network layered diagram:
 
-![](./markdownImages/neuralNetworkFeedback.png)
+![neuralNetworkFeedback](./markdownImages/neuralNetworkFeedback.png)
 
 or the computation graph via "unrolling" the graph:
 
-![](./markdownImages/computationGraphFeedback.png)
+![computationGraphFeedback](./markdownImages/computationGraphFeedback.png)
 
 Analysis of a computation graph for two distinct nodes, which contain no overlapping dependencies, can be parallelized and even distributed to multiple machines in a cluster or cloud computing application. This can be referred to as "lazy evaluation".
 
@@ -105,7 +107,7 @@ Constants are immutable values used for storing discrete values in TensorFlow.
 
 Due to the iterative approach of machine learning algorithms, placeholders are required for the input parameters to assume new values for the current iteration. For example, in the linear regression implementation, placeholders are used to take the values of the x and y coordinates for the data points for each iteration of the algorithm.
 
-![](./markdownImages/placeholders.png)
+![placeholders](./markdownImages/placeholders.png)
 
 The placeholders in this computation graph are the input nodes A and B.
 
@@ -157,7 +159,7 @@ The individual pixels of an image, as described above, are converted to tensors 
 
 Images can also be represented in 3-D tensors. The first two elements correspond to the pixel's x-and-y coordinate location, and the third element corresponds to the number of channels of color-encoding in the image.
 
-![](./markdownImages/3-DRepresentation.png)
+![3-DRepresentation](./markdownImages/3-DRepresentation.png)
 
 In the above image, the left tensor is a grayscale image, whereas the right tensor representation is a 3-channel encoded image.
 
@@ -181,7 +183,7 @@ In general, there are two types of ML algorithms:
 
 The K-nearest-neighbor (KNN) algorithm is a supervised algorithm which uses the corpus of data to identify the closest image to the input. The algorithm accomplishes this using distance measures. Since the image as a tensor is simply a matrix of values, the distance between an input image and a training data image can be computed just like with regression. Euclidean, Hamming, and Manhattan distance measures are three examples of distance measures.
 
-![](./markdownImages/kNearestNeighbors.png)
+![kNearestNeighbors](./markdownImages/kNearestNeighbors.png)
 
 In the above example, the star represents the input image, and the various data points represent the training data images. The distance is computed between the input image and all data points in the training set. Based on this calculation, the algorithm will determine that the input image is a blue data point.
 
@@ -189,17 +191,17 @@ The L1 distance, also called the Manhattan distance, is the preferred method for
 
 One-hot notation is a vector which represents the value of the digit corresponding to the index of the vector. For example, a 4 would have a vector of [0, 0, 0, 0, 1, 0, 0, 0, 0, 0] in one-hot notation, the fourth index of the vector being 1, the one-hot index, while all other indeces are zero. By definition, this notation can only be used on discrete quantities.
 
-# Regression
+## Regression
 
-## Implementing Linear Regression
+### Implementing Linear Regression
 
 Linear regression can be implemented using a simple neural network of one neuron containing a linear activation function. The implementation of an ML-based regression algorithm is as follows:
 
-![](./markdownImages/implementingRegression.png)
+![implementingRegression](./markdownImages/implementingRegression.png)
 
 An epoch is each iteration or step of the optimizer, and the batch size is the number of data points given to the optimizer for each epoch. Stochastic gradient descent optimizers use only one data point at a time, while mini-batch and batch gradient descent optimizers use a subset or the entirety of the data points, respectively, for each iteration. The goal of the optimizer is to minimize the cost function of the regression.
 
-## Logistic Regression
+### Logistic Regression
 
 Linear regression seeks to quantify effects given causes, while logistic regression seeks to quantify the probability of effects given causes. For this reason, logistic regression is also known as linear classification.
 
@@ -210,13 +212,13 @@ While similar, the uses of logistic regression vary, and the TensorFlow implemen
 
 Logistic regression uses a probability function which results in an increasing probability for positive values of A and B, and a decreasing probability for negative values of A and B (per the below image)
 
-![](./markdownImages/logisticRegression.png)
+![logisticRegression](./markdownImages/logisticRegression.png)
 
 [ ] TODO: update image with no cursor.
 
 Logistic regression requires a categorical dependent or y-variable, and can use a continuous or categorical x-variable just like linear regression. Logistic regression seeks to fit the data to an S-curve by solving for the optimal values of the A and B variables. Logistic regression can be converted to a linear form by taking the log transformation of the probability equation. This is known as the logit equation, which is defined as the natural log of the odds function.
 
-## Implementing Logistic Regression
+### Implementing Logistic Regression
 
 Logistic regression varies from linear regression implementation in two primary ways as described above:
 
@@ -225,19 +227,19 @@ Logistic regression varies from linear regression implementation in two primary 
 
 The number of neurons required to implement logistic regression in TensorFlow is the number of classification labels required minus one. So for binary classification, our labels are True and False, and as such this requires only one neuron to implement (2 - 1 = 1).
 
-![](./markdownImages/implementingLogisticRegression.png)
+![implementingLogisticRegression](./markdownImages/implementingLogisticRegression.png)
 
 The left-hand side of the neuron-level image is identical to the linear regression neuron, with the activation function producing the probability equations as shown in the below image.
 
-![](./markdownImages/logisticRegressionNeuralNetwork.png)
+![logisticRegressionNeuralNetwork](./markdownImages/logisticRegressionNeuralNetwork.png)
 
 Generalizing, an M-length feature vector with N number of required classifications requires the W vector to be [M, N] and b to be [N].
 
-![](./markdownImages/logisticRegressionGeneralized.png)
+![logisticRegressionGeneralized](./markdownImages/logisticRegressionGeneralized.png)
 
 The cross-entropy cost function for logistic regression can be visualized by imagining two sets of series data: one for the actual y-values (y_actual) and one for the predicted y-values (y_predicted). Superimposing these two series on the same axis results in either the labels of the two series being lined up as in the below image, or not lined up. The lined up, or in-synch labels result in a low cross-entropy, while out of synch labels result in a high cross entropy. Cross-entropy is a way to determine if two sets of numbers have been drawn from similar or different probability distributions.
 
-![](./markdownImages/crossEntropyVisualized.png)
+![crossEntropyVisualized](./markdownImages/crossEntropyVisualized.png)
 
 ### Estimators in TensorFlow
 
@@ -251,13 +253,13 @@ A single neuron can be classified as active if a change in the input to that neu
 
 A neuron, as described before, contain an affine transformation and an activation function. Examples of common activation functions and their output graphs are shown in the below image.
 
-![](./markdownImages/activationFunctions.png)
+![activationFunctions](./markdownImages/activationFunctions.png)
 
 The choice of activation function drives the design of a neural network. The combination of the affine transformation and activation function allow neural networks to learn arbitrarily complex algorithms.
 
 Training via back propogation is a way to feed the error and output of the optimization algorithm backwards through the layers of the neural networks to tweak the weights and biases (variables W and b, respectively) in reverse sequential order to improve the accuracy of the neural network.
 
-![](./markdownImages/backPropagation.png)
+![backPropagation](./markdownImages/backPropagation.png)
 
 ### Hyperparameters
 
@@ -273,7 +275,7 @@ Initialization of the variables should be conducted such that the variance of th
 
 Saturation occurs when the output of the activation function plateaus or is unchanging. In the logit S-curve for example, the output in the center, where the slope is non-zero, is the active or responsive region, while the left and right-hand side of the curve, where the slope is zero, is the saturation region. In these regions, the neuron might become unresponsive - that is, the output of the neuron will not change as the input changes. If this continues throughout training, and the neuron cannot be moved out of the saturation region, the neuron is said to be dead.
 
-![](./markdownImages/saturationRegion.png)
+![saturationRegion](./markdownImages/saturationRegion.png)
 
 The ReLU activation function also has a saturation region for small negative values. The ELU activation function, which has a small exponential value for the negative region, is the preferred method to dealing with the nonresponsive predisposition of the ReLU function.
 
@@ -297,7 +299,7 @@ Precision, which can be thought of as a measure of exactness or quality, is comp
 
 Recall, which is the measure of completeness or quantity, can be computed by accuracy of the prediction label versus the total number of "true" labels for a binary classifier (true positive and false negative).
 
-![](./markdownImages/confusionMatrix.png)
+![confusionMatrix](./markdownImages/confusionMatrix.png)
 
 Stated differently,
 
@@ -313,7 +315,7 @@ The decision threshold is the point on a logistic curve at which the model predi
 
 Plotting recall versus conservativeness results in a reciprocal graph to Precision versus Conservativeness graph. Thus, a model which has high recall has low precision, and a model with high precision has low recall.
 
-![](./markdownImages/precisionRecallTradeoff.png)
+![precisionRecallTradeoff](./markdownImages/precisionRecallTradeoff.png)
 
 ### Choosing Model Characteristics
 
@@ -337,7 +339,7 @@ The convolutional neural network is ideal for processing images. A convolutional
 
 The most important part of a CNN are the convolution layers as the local receptive field stimuli and response are the building blocks of CNNs. Convolution can be thought of as a sliding window function applied to a matrix. For image processing, the matrix is a 2-D matrix and the function is a filter or kernel function. For a simple 6x6 matrix, we choose a 3x3 kernel as a design decision when choosing a CNN. The kernel, which can be seen in the center of the diagram below, is then overlaid with the matrix and slid sequentially from the top-left, n number of spaces left and down as chosen by the algorithm design. The sum of the unfiltered values for each step, which correlate to the local receptive field, are then represented in a 4x4 convolution matrix (right-side of the diagram).
 
-![](./markdownImages/convolutionDiagram.png)
+![convolutionDiagram](./markdownImages/convolutionDiagram.png)
 
 [The choice of the kernel function](http://aishack.in/tutorials/image-convolution-examples) depends on the application. For example, if the goal is to acheive a blurring effect, a kernel function which averages neighboring pixels would be chosen to acheive that effect. Kernel functions can be designed to acheive many complex image effects, such as edge and line detection.
 
@@ -357,7 +359,7 @@ Convolutional layers are comprised of feature maps, which are themselves compris
 
 Each neuron's receptive field includes all the feature maps of all previous layers. In this way, aggregated features are processed in convolutional layers. For a visualization of how CNNs are constructed, see the image below. Many feature maps comprise a convolutional layer, and many convolutional (and pooling layers) comprise a single CNN.
 
-![](./markdownImages/explodedViewCNN.png)
+![explodedViewCNN](./markdownImages/explodedViewCNN.png)
 
 ### Pooling Layers
 
@@ -373,7 +375,7 @@ CNNs are typically comprised of alternating convolutional and pooling layers. Th
 
 Recurrent Neural Networks (RNNs) are based upon a recurrent neuron, that is a neuron which has memory or state. Unlike normal neural networks or convolutional neural networks the output of a recurrent neuron is fed back in as an input to the same neuron. This feedback makes RNNs well-suited for time series data. RNNs are known as auto-regressive because the output at time `t` is dependent on the output at time `t-1`.
 
-![](./markdownImages/recurrentNeuron.png)
+![recurrentNeuron](./markdownImages/recurrentNeuron.png)
 
 ### Recurrent vs Normal Neuron
 
@@ -381,7 +383,7 @@ For a regular neuron, the input is a vector which produces a scalar output. Howe
 
 As recurrent neurons primarily deal with time-series data, it can be useful to think about the neuron for each instance of time for a given set. One way to visualize this is through "unrolling" the recurrent neuron through time. That is, showing the neurons inputs and outputs as plotted along a time axis. In the below image, notice how the output of the neuron at t=0 feeds into the input of the same neuron at t=1.
 
-![](./markdownImages/unrollingRNN.png)
+![unrollingRNN](./markdownImages/unrollingRNN.png)
 
 A layer within an RNN is generally a group of recurrent neurons, known as a RNN or memory cell. The same process for unrolling through time is performed on this memory cell for as many time instances as there are datapoints.
 
@@ -397,11 +399,11 @@ In order to combat the problems with vanishing and exploding gradients in deep r
 
 A long/short-term memory cell (LSTM) has several additional components over and above a basic RNN cell. The inputs to an LSTM cell are the basic input, X<sub>t</sub>, the short-term memory value, C<sub>t-1</sub>, and the long-term memory value, h<sub>t-1</sub>. Within the memory cell are components which choose which old memories are important and which should be forgotten, update short and long-term state, as well as calculate the output y<sub>t<sub>.
 
-![](./markdownImages/LSTM.png)
+![LSTM](./markdownImages/LSTM.png)
 
 These components are acheived using four distinct and fully-connected neural networks within the LSTM: the forget gate NN, the main NN, the input gate NN, and the output gate NN. Gates perform element-wise multiplication of two vectors. The forget gate looks at long-term memory and determines which memories from long-term memory should be included and which should be forgotten. The main gate works similarly to a basic RNN memory cell, with the distinction of storing a part of its output in long-term memory. The input and output gates determine which part of the long-term state should be included in the long-term memory and long-term state, respectively. In addition to these neural networks, the LSTM also has gate controllers which have logic for when to turn on all of these gates.
 
-![](./markdownImages/LSTM-NN.png)
+![LSTM-NN](./markdownImages/LSTM-NN.png)
 
 Some variants of LSTM cells are peephole connections, which are LSTM cells that store state for more than one period, and Gated Recurrent Unit (GRU) which are a simplified LSTM which stores only one state vector for both long and short-term memory. GRUs have fewer internal gates and NNs and acheive better performance over a basic LSTM cell.
 
@@ -427,7 +429,7 @@ Clustering algorithms look within the data to determine commanalities within the
 
 Many clustering algorithms for grouping data exist, K-Means clustering is a popular example of a clustering algorithm. The objective of K-Means clustering is to determine k number of clusters for n number of data points and optimize the total reconstruction error. This is performed by assigning each cluster a centroid and computing the distance between each point to it's centroid. The mean of these distances is then computed, and the centroid is then moved to the position of this mean. Distances are then computed between each point and all centroids in order to facilitate points moving to a closer centroid. This process is then repeated iteratively until points no longer move to another cluster which indicates a convergent model. These centroids, also known as reference vectors, are then indicative of every data point within the cluster.
 
-#### Hyperparameters
+### Hyperparameters
 
 The number of clusters, k, is the primary hyperparameter for K-Means clustering. The value for k is determined by varying the number of clusters and computing the total reconstruction error for that model. Plotting the total reconstruction error against the value of k and analyzing the graph to find the "elbow" - that is the point at which the total reconstruction error drops dramatically.
 
@@ -439,7 +441,7 @@ The third hyperparameter is the method for calculating distance. Euclidean, maha
 
 Principal components analysis is a statistical method for reducing the number of dimensions needed to accurately represent a dataset. The first principal component is performed by projecting all datapoints onto a single axis. The greater the distance between the points, the better the projection. The second principal component is orthoganal to the first principal component and, by definition, has less distance between the datapoints when compared with the first principal component. Consider a matrix, X, of datapoints contained within k columns by n rows. The goal is to reduce this data into it's principal components using PCA Factor Reduction. After performing PCA, we obtain k rows by n columns of another matrix, F. However the data columns, F<sub>i</sub> for i in k, after performing PCA are highly uncorrelated. F<sub>1</sub> and F<sub>2</sub> contain the vast majority of total variance contained within the original data.
 
-![](./markdownImages/pcaDimensionReduction.png)
+![/pcaDimensionReduction](./markdownImages/pcaDimensionReduction.png)
 
 Reconstructing the original data from the principal components is performed by multiplying the principal component matrix by a k x k weight vector which is generated during principal component analysis.
 
@@ -455,13 +457,11 @@ Design choices for an autoencoder NN are the activation function to the neurons 
 
 Autoencoders, as stated earlier, are used as a pre-training step before performing supervised learning to find hidden patterns in the training data. Adding more hidden layers to an autoencoder NN, or "stacking" the autoencoders, will result in a stronger or more robust autoencoder NN which is capable of learning more complex patterns in data. The center hidden layer remains the smallest (having the fewest neurons) with increasingly large, symmetrical layers as you move out from the center. Overfitting the data is a very serious concern with stacked autoencoders. "Tying" the weights and biases of symmetric hidden layers (layers 1 and 3 in the below image)to be the same is one method to combat stacked autoencoders overfitting the data. Another method is to train each hidden layer separately.
 
-![](./markdownImages/stackedAutoencoders.png)
+![stackedAutoencoders](./markdownImages/stackedAutoencoders.png)
 
 ### Denoising Autoencoders
 
 This tool is intended to test an autoencoders efficacy as it is required to discern the signal from the random noise which we add to the input signal. Since the input to the autoencoder and the output are not 1:1, the autoencoder cannot just simply copy over the input signal to acheive the correct result.
-
-###
 
 # Labs
 
@@ -749,7 +749,7 @@ Epoch: 20, Test Loss: 2.1, Test Acc: 0.7503
 
 This lab is meant to demonstrate how K-Means clustering is performed. The dataset we use for this lab is generated using `np.array([[random.randint(1, 1000) for in in range(2)], dtype=np.float32)` for the first group, the following groups having index numbers 700 to 2000 and 1700 to 3000 respectively. The values for these data points can be seen in the image of the plot below.
 
-![](./markdownImages/kMeansPlot.png)
+![kMeansPlot](./markdownImages/kMeansPlot.png)
 
 Once the datapoints have been declared, we can import the necessary tensorflow libraries to perform clustering on this dataset `from tensorflow.contrib.learn.python.learn.estimators import kmeans` and `from tensorflow.contrib.factorization.python.ops import clustering_ops`. Our K-Means estimator can then be instantiated using `k_means_estimator = kmeans.KMeansClustering(num_clusters = 3)`. We perform training on this dataset using `fit = k_means_estimator.fit(input_fn=lambda: input_fn_2d(input_2d_x), steps=1000`. Here we are using a lambda function rather than a feed dictionary to pass in the x-values for 1000 data points to train the clustering algorithm. The location of our clusters after this training is complete is shown below:
 
@@ -759,7 +759,7 @@ array([[2350.247  , 2326.4658 ],
        [ 537.62305,  465.16745]], dtype=float32)
 ```
 
-![](./markdownImages/kMeansCentroid.png)
+![kMeansCentroid](./markdownImages/kMeansCentroid.png)
 
 Several features of our K-Means clustering estimator were generated randomly, using `k_means_estimator.get_params()` which yields
 
@@ -829,7 +829,6 @@ Next we `import StandardScaler` from the `sklearn.preprocessing` library in orde
 scaler = StandardScaler()
 
 returns_arr_scaled = scaler.fit_transform(returns_arr)
-```
 
 array([[-1.3815757 , -1.66841975, -0.00794824],
 [ 0.93127707, -0.06227426, 0.79937034],
@@ -841,6 +840,7 @@ array([[-1.3815757 , -1.66841975, -0.00794824],
 [-0.20090235, 1.56355606, 0.16856723],
 [ 0.99212851, -0.65272298, 1.33141124],
 [-1.51779118, 0.59439231, -2.00195763]])
+```
 
 Next we perform principal components analysis on this normalized and scaled data using:
 
@@ -953,7 +953,7 @@ batch_size = 100
 The code used by our `tf.Session()` is:
 
 ```python
-with tf.Sessio() as sess:
+with tf.Session() as sess:
     init.run()
 
     for epoch in range(n_epochs):
@@ -1007,16 +1007,15 @@ We then execute the query and output the first 5 rows using
 ```python
 [In]: trips = taxiquery.execute(query_params=query_parameters).result().to_dataframe()
 trips[:5]
-
-[Out]:
-daynumber	numtrips
-0	1	62943
-1	2	43410
-2	3	53866
-3	4	41602
-4	5	41923
-
 ```
+
+| index | daynumber | numtrips |
+| ----- | --------- | -------- |
+| 0     | 1         | 62943    |
+| 1     | 2         | 43410    |
+| 2     | 3         | 53866    |
+| 3     | 4         | 41602    |
+| 4     | 5         | 41923    |
 
 Benchmarking this result can be conducted by using the average and the root mean square error (RSME) which computes an average of 54,674 and an RSME of 10163, which is very high.
 
@@ -1025,6 +1024,33 @@ We wish to then correspond the taxi ride data with the daily temperature and pre
 First we query the `fh-bigquery.weather_gsod.stations` for a station name `LIKE '%LA GUARDIA%'` and create a weather query `%bq query -n wxquery` which also parameterizes the `@YEAR` and execute using a dictionary for the `query_parameters` as above.
 
 We then call `pd.merge(weather, trips, on='daynumber')` to join the two result tables. And also generate plots to visually inspect the correlation between two chosen variables. `data.plot(kind='scatter', x='maxtemp', y='numtrips')` plots the number of trips against the temperature, which does not provide any valuable insights, however plotting the number of trips for each day of the week shows a much more striking correlation.
+
+After cleaning up the data, we then train an ML model to predict the number of taxi cab trips. We shuffle the data to remove any ordering in the input data set and take the average and RSME as before, which yields an average of 47394 and a RMSE of 9409.
+
+We choose a training data set as 80% of the input data with the remaining 20% as the test dataset. We then set `tf.logging.set_verbosity(tf.logging.WARN)` to only output info for every 100 steps. We save our trained model to `./trained_model_linear` using the `model_dir=<output_directory>` argument and instantiate a linear regressor and estimator which abstracts away many of the settings of our TF model. We also set `enable_centered_bias` option to false and use the AdamOptimizer.
+
+After running the training data through the Linear Regressor, we obtain an RMSE of 8498, a slight improvement over the previous example with no ML model.
+
+Next we implement a 2-layer deep neural network (DNN) using `tf.contrib.learn.DNNRegressor()` and provide `hidden_units=[5,2]` as an argument which creates our DNN with 5 neurons in the first layer and 2 neurons in the output layer. This DNN improves our RMSE to 7812.
+
+After saving our model, we can supply input values to the model to make predictions. We test the predictive capability of our model using these inputs:
+
+```python
+input = pd.DataFrame.from_dict(data =
+ {
+     'dayofweek' : [4, 5, 6],
+     'mintemp' : [30, 60, 50],
+     'maxtemp' : [40, 70, 60],
+     'rain' : [0, 0.8, 0]
+ }
+)
+```
+
+And again run a Linear regressor with the weights and biases from our saved model.
+
+```python
+[Out]: [46388.035, 49281.36, 52235.11 ]
+```
 
 # Jupyter Notebook Tips
 
