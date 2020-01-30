@@ -1052,6 +1052,65 @@ And again run a Linear regressor with the weights and biases from our saved mode
 [Out]: [46388.035, 49281.36, 52235.11 ]
 ```
 
+## Data cleaning and exploring
+
+For this lab, we will be using the `nyc-tlc.yellow.trips` dataset which is a [BigQuery public dataset](https://bigquery.cloud.google.com/table/nyc-tlc:yellow.trips "NYC Yellow Trips BigQuery dataset"). We import seaborn, matplotlib, pandas, numpy, and bigquery and begin to query the dataset. 
+
+```python
+sql = """
+  SELECT
+    pickup_datetime, pickup_longitude, pickup_latitude, dropoff_longitude,
+    dropoff_latitude, passenger_count, trip_distance, tolls_amount, 
+    fare_amount, total_amount 
+  FROM `nyc-tlc.yellow.trips`
+  LIMIT 10
+"""
+
+client = bigquery.Client()
+trips = client.query(sql).to_dataframe()
+```
+
+We then select one out of every 100,000 records by hashing the result set using the FARM_FINGERPRINT hash function, and selecting only those records who have a modulus of 1 when computed with 100,000.
+
+Graphing the `trip_distance` versus the `fare_amount`, we see that some records are not accurate and display a 0 trip distance and some with a fare amount less than the minimum fare of $2.50. We then modify our BigQuery to eliminate these results with the following
+
+```python
+ WHERE
+   ABS(MOD(FARM_FINGERPRINT(CAST(picku_datetime AS STRING)), 100000)) = 1
+   AND trip_distance > 0 AND fare_amount >= 2.5
+```
+
+Now plotting the resulting dataset, we have eliminated the erroneous data points, however there are noticeable modes at $45 and $50. It turns out these are the fixed-amounts from JFK and La Guardia airport into anywhere in Manhattan.
+
+Using `trips.describe()` gives useful information about the dataframe, such as count, mean, standard deviation, min, 25% 50% 75%, and max for each column. Looking at the mins and maxes for longitude reveals another error in our dataset: the range is impossible, nearly 71 degrees.
+
+Plotting the latitudes and longitudes of each tuple ({pickup_latitude, pickup_longitude} and {dropoff_latitude, dropoff_longitude}) for 10 rides shows the vector paths traveled by the taxis for those rides.
+
+Further cleanup of the data is required. NYC Latitudes are around 41 and longitudes are around -74. Passengers should not be 0. Since tips are inconsistently calculated depending on the payment method, we are going to recalculate the total fare as the fare_amount and tolls_amount and remove those columns from the dataframe. We also can remove the trip distance for our ML prediction algorithm as it is unknown at the time when the taxi is hired. Also the timestamp is unneccessary. Below is the logic needed to accomplish this cleanup.
+
+```python
+def preprocess(trips_in):
+    trips = trips_in.copy(deep=True)
+    trips.fare_amount = trips.fare_amount + trips.tolls_amount
+    del trips['tolls_amount']
+    del trips['total_amount']
+    del trips['trip_distance']
+    del trips['pickup_datetime']
+
+    qc = np.all([\
+        trips['pickup_longitude'] > -78, \
+        trips['pickup_longitude'] < -70, \
+        trips['dropoff_longitude'] > -78, \
+        trips['dropoff_longitude'] > -78, \
+        trips['pickup_latitude'] > 37, \
+        trips['pickup_latitude'] < 45, \
+        trips['dropoff_longitude'] > 37, \
+        trips['dropoff_longitude'] < 45, \
+        trips['passenger_count'] > 0,
+        ], axis=0)
+    return trips[qc]
+```
+
 # Jupyter Notebook Tips
 
 [This website](https://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/) contains very useful information for installing packages within the jupyter notebook environment.
