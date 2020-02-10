@@ -1052,16 +1052,16 @@ And again run a Linear regressor with the weights and biases from our saved mode
 [Out]: [46388.035, 49281.36, 52235.11 ]
 ```
 
-## Data cleaning and exploring
+### _Data cleaning and exploring_
 
-For this lab, we will be using the `nyc-tlc.yellow.trips` dataset which is a [BigQuery public dataset](https://bigquery.cloud.google.com/table/nyc-tlc:yellow.trips "NYC Yellow Trips BigQuery dataset"). We import seaborn, matplotlib, pandas, numpy, and bigquery and begin to query the dataset. 
+For this lab, we will be using the `nyc-tlc.yellow.trips` dataset which is a [BigQuery public dataset](https://bigquery.cloud.google.com/table/nyc-tlc:yellow.trips "NYC Yellow Trips BigQuery dataset"). We import seaborn, matplotlib, pandas, numpy, and bigquery and begin to query the dataset.
 
 ```python
 sql = """
   SELECT
     pickup_datetime, pickup_longitude, pickup_latitude, dropoff_longitude,
-    dropoff_latitude, passenger_count, trip_distance, tolls_amount, 
-    fare_amount, total_amount 
+    dropoff_latitude, passenger_count, trip_distance, tolls_amount,
+    fare_amount, total_amount
   FROM `nyc-tlc.yellow.trips`
   LIMIT 10
 """
@@ -1072,7 +1072,7 @@ trips = client.query(sql).to_dataframe()
 
 We then select one out of every 100,000 records by hashing the result set using the FARM_FINGERPRINT hash function, and selecting only those records who have a modulus of 1 when computed with 100,000.
 
-Graphing the `trip_distance` versus the `fare_amount`, we see that some records are not accurate and display a 0 trip distance and some with a fare amount less than the minimum fare of $2.50. We then modify our BigQuery to eliminate these results with the following
+Graphing the `trip_distance` versus the `fare_amount`, we see that some records are not accurate and display a 0 trip distance and some with a fare amount less than the minimum fare of \$2.50. We then modify our BigQuery to eliminate these results with the following
 
 ```python
  WHERE
@@ -1110,6 +1110,74 @@ def preprocess(trips_in):
         ], axis=0)
     return trips[qc]
 ```
+
+This step removed ~300 rows (or 3% of the data) which is reasonable. The next step is to split the data into training, validation, and test sets.
+
+```python
+shuffled = tripsqc.sample(frac=1)
+trainsize = int(len(shuffled['fare_amount']) * 0.70)
+validsize = int(len(shuffled['fare_amount']) * 0.15)
+
+df_train = shuffled.iloc[:trainsize, :]
+df_valid = shuffled.iloc[trainsize:(trainsize+validsize), :]
+df_valid = shuffled.iloc[(trainsize+validsize):, :]
+```
+
+We then write these dataframes to csv files by calling `dataframe.to_csv()` in pandas and calling some shell commands to ensure the files were written correctly.
+
+```bash
+!head -10 taxi-valid.csv
+
+!ls -l *.csv
+
+head taxi-train.csv
+```
+
+Which all produce expected outputs of a sample of the data (for the `head` command or a list of files (for the `!ls -l` command).
+
+Next we create a benchmark for our model by doing some crude analysis of the data. First we compute the Euclidean distance using the Harversine formula.
+
+```python
+def distance_between(lat1, lon1, lat2, lon2):
+dist = np.degrees(np.arccos(np.minimum(1,np.sin(np.radians(lat1)) * np.sin(np.radians(lat2)) + np.cos(np.radians(lat1)) * np.cos(np.radians(lat2))
+return dist
+```
+
+We create helper methods to compute this distance based on column names in our dataframe (distance_between()), and to compute and print the RMSE of our benchmark model (`compute_rsme(actual, predicted)` and `print_rmse(df, rate, name)`, respectively).
+
+We estimate the rate as the mean of the fare amount divided by the mean of the estimated distance and reframe our data using a feature vector which matches our parameters for the `distance_between()` method.
+
+After running this benchmark we obtain the following:
+
+```python
+[Out]:
+Rate = $2.6139195836569113/km
+Train RMSE = 6.369930007157149
+Valid RMSE = 7.848074502389864
+Test RMSE = 11.806951666084867
+```
+
+We then create a helper function to query the dataset for quick calculation of our baseline value. `create_query(phase, EVERY_N)` where phase is 1 for training or 2 for validation, and EVERY_N is an optional parameter for the number of rows to use from our dataset.
+
+Using `create_query(2, 100000)`, we obtain
+
+```python
+[Out]: Final Validation Set RMSE = 7.596693062217029
+```
+
+### _Taxi Cab TensorFlow Model_
+
+After obtaining a baseline value in the previous lab, we are now ready to build a linear regressor model to try to improve upon our result obtained from the crude model.
+
+After importing tensorflow and the other necessary libraries, we import the csvs written to our datalab VM instance in the previous lab. We then build a model using `tf.estimator.LinearRegressor()` and save it to the `taxi_trained` directory. We call `model.train()` on the training data with 10 epochs and TensorFlow builds a linear regressor model to fit our training data. Using our helper function `print_rmse()` on our model with the validation data produces
+
+```python
+[Out]: RMSE on validation dataset = 10.701353073120117
+```
+
+This is worse than our crude model! Printing the output of the predicted value for each of the first 5 iterations, we see that the values are very close to one another. This explains why the error is so high, the model is predicting the same amount for every trip.
+
+In an attempt to get our RMSE closer to the \$6 value that we aimed for, we then choose to use a deep neural network design rather than the linear regression model.
 
 # Jupyter Notebook Tips
 
