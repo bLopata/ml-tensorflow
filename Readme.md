@@ -2,11 +2,170 @@
 [_metadata_:style]: - "blopata.github.io/assets/css/darkdownstyle.css"
 [_metadata_:tags]: - "python, tensorflow, tf, machine learning, ML"
 
+<!-- vscode-markdown-toc -->
+
+# Machine Learning with TensorFlow
+
+### I - [Introduction](#introduction)
+
+- [1. Main Types of machine learning](#1-main-types-of-machine-learning)
+  - [1.1. Classification](#11-classification)
+  - [1.2. Regression](#12-regression)
+  - [1.3. Clustering](#13-clustering)
+  - [1.4. Rule extraction](#14-rule-extraction)
+
+### II - [Introduction to TensorFlow](#introduction-to-tensorflow)
+
+- [2. Computation graph](#2-computation-graph)
+
+  - [3. Tensors](#3-tensors)
+    - [3.1. Rank of a tensor](#31-rank-of-a-tensor)
+    - [3.2. Shape of a tensor](#32-shape-of-a-tensor)
+    - [3.3. Data type of a tensor](#33-data-type-of-a-tensor)
+  - [4. Datatypes in TensorFlow](#4-datatypes-in-tensorflow)
+    - [4.1. Constants](#41-constants)
+    - [4.2. Placeholders](#42-placeholders)
+    - [4.3. Feed dictionary](#43-feed-dictionary)
+    - [4.4. Variables](#44-variables)
+
+### III - [Working with TensorFlow](#working-with-tensorflow)
+
+- [5. Multithreading](#5-multithreading)
+- [6. Working with Images](#6-working-with-images)
+  - [6.1. Images as Tensors](#61-images-as-tensors)
+  - [6.2. Compiling images into a list](#62-compiling-images-into-a-list)
+- [Learning algorithms](#learning-algorithms)
+
+  - [7. Clustering](#7-clustering)
+    - [7.1. K-nearest-neighbor Algorithm](#71-k-nearest-neighbor-algorithm)
+  - [8. Regression](#8-regression)
+    - [8.1. Linear Regression](#81-linear-regression)
+      - [8.1.1. _Implementing Linear Regression_](#811-implementing-linear-regression)
+    - [8.2. Logistic Regression](#82-logistic-regression)
+      - [8.2.1. _Implementing Logistic Regression_](#821-implementing-logistic-regression)
+    - [8.3. Estimators in TensorFlow](#83-estimators-in-tensorflow)
+
+### IV - [Neural Networks](#neural-networks)
+
+- [Machine Learning with TensorFlow](#machine-learning-with-tensorflow)
+    - [I - Introduction](#i---introduction)
+    - [II - Introduction to TensorFlow](#ii---introduction-to-tensorflow)
+    - [III - Working with TensorFlow](#iii---working-with-tensorflow)
+    - [IV - Neural Networks](#iv---neural-networks)
+    - [V - Labs](#v---labs)
+- [Introduction](#introduction)
+  - [1. Main Types of machine learning](#1-main-types-of-machine-learning)
+    - [1.1. Classification](#11-classification)
+    - [1.2. Regression](#12-regression)
+    - [1.3. Clustering](#13-clustering)
+    - [1.4. Rule extraction](#14-rule-extraction)
+- [Introduction to TensorFlow](#introduction-to-tensorflow)
+  - [2. Computation graph](#2-computation-graph)
+  - [3. Tensors](#3-tensors)
+    - [3.1. Rank of a tensor](#31-rank-of-a-tensor)
+    - [3.2. Shape of a tensor](#32-shape-of-a-tensor)
+    - [3.3. Data type of a tensor](#33-data-type-of-a-tensor)
+  - [4. Datatypes in TensorFlow](#4-datatypes-in-tensorflow)
+    - [4.1. Constants](#41-constants)
+    - [4.2. Placeholders](#42-placeholders)
+    - [4.3. Feed dictionary](#43-feed-dictionary)
+    - [4.4. Variables](#44-variables)
+- [Working with TensorFlow](#working-with-tensorflow)
+  - [5. Multithreading](#5-multithreading)
+  - [6. Working with Images](#6-working-with-images)
+    - [6.1. Images as Tensors](#61-images-as-tensors)
+    - [6.2. Compiling images into a list](#62-compiling-images-into-a-list)
+- [Learning algorithms](#learning-algorithms)
+  - [7. Clustering](#7-clustering)
+    - [7.1. K-nearest-neighbor Algorithm](#71-k-nearest-neighbor-algorithm)
+  - [8. Regression](#8-regression)
+    - [8.1. Linear Regression](#81-linear-regression)
+      - [8.1.1. _Implementing Linear Regression_](#811-implementing-linear-regression)
+    - [8.2. Logistic Regression](#82-logistic-regression)
+      - [8.2.1. _Implementing Logistic Regression_](#821-implementing-logistic-regression)
+    - [8.3. Estimators in TensorFlow](#83-estimators-in-tensorflow)
+- [Neural Networks](#neural-networks)
+  - [9. Neural Network Basics](#9-neural-network-basics)
+    - [9.1. Neuronal Operations](#91-neuronal-operations)
+    - [9.2. Hyperparameters](#92-hyperparameters)
+  - [10. Problems with Neural Networks](#10-problems-with-neural-networks)
+    - [10.1. Overfitting and Underfitting](#101-overfitting-and-underfitting)
+    - [10.2. Prediction Accuracy](#102-prediction-accuracy)
+    - [10.3. Decision Threshold](#103-decision-threshold)
+    - [10.4. Choosing Model Characteristics](#104-choosing-model-characteristics)
+  - [11. Convolutional Neural Networks](#11-convolutional-neural-networks)
+    - [11.1. Convolution](#111-convolution)
+    - [11.2. Design Features of CNNs](#112-design-features-of-cnns)
+    - [11.3. CNNs versus DNNs](#113-cnns-versus-dnns)
+    - [11.4. Feature Maps](#114-feature-maps)
+    - [11.5. Pooling Layers](#115-pooling-layers)
+    - [11.6. CNN Architectures](#116-cnn-architectures)
+  - [12. Recurrent Neural Networks](#12-recurrent-neural-networks)
+    - [12.1. Recurrent Neurons](#121-recurrent-neurons)
+    - [12.2. Recurrent vs Normal Neuron](#122-recurrent-vs-normal-neuron)
+    - [12.3. Training an RNN](#123-training-an-rnn)
+    - [12.4. Long Memory Neurons](#124-long-memory-neurons)
+    - [12.5. Text as Sequential Data](#125-text-as-sequential-data)
+  - [13. Supervised and Unsupervised Learning](#13-supervised-and-unsupervised-learning)
+    - [13.1. Clustering Algorithms](#131-clustering-algorithms)
+      - [13.1.1. K-Means Clustering](#1311-k-means-clustering)
+        - [Hyperparameters for K-Means Clustering](#hyperparameters-for-k-means-clustering)
+  - [14. Autoencoders and Principal Components Analysis](#14-autoencoders-and-principal-components-analysis)
+    - [14.1. Autoencoders Neural Network Architecture](#141-autoencoders-neural-network-architecture)
+    - [14.2. Stacked Autoencoders](#142-stacked-autoencoders)
+    - [14.3. Denoising Autoencoders](#143-denoising-autoencoders)
+- [Labs](#labs)
+  - [15. Logistic Regression](#15-logistic-regression)
+  - [16. MNIST & KNN](#16-mnist--knn)
+  - [17. Neural Network Automobile Prices](#17-neural-network-automobile-prices)
+  - [18. Iris flower DNN Classifier](#18-iris-flower-dnn-classifier)
+  - [19. Convolution Neural Network](#19-convolution-neural-network)
+  - [20. Building a CNN Using Estimator API](#20-building-a-cnn-using-estimator-api)
+  - [21. RNNs for Image Classification](#21-rnns-for-image-classification)
+  - [22. Sentiment Analysis Using RNNs](#22-sentiment-analysis-using-rnns)
+  - [23. K-Means Clustering with 2-D points](#23-k-means-clustering-with-2-d-points)
+  - [24. K-Means Clustering with Images](#24-k-means-clustering-with-images)
+  - [25. Principal Component Analysis](#25-principal-component-analysis)
+  - [26. Stacked Autoencoder Lab](#26-stacked-autoencoder-lab)
+  - [27. GCP Taxicab Prediction Lab](#27-gcp-taxicab-prediction-lab)
+    - [27.1. _Data cleaning and exploring_](#271-data-cleaning-and-exploring)
+    - [27.2. _Taxi Cab TensorFlow Model_](#272-taxi-cab-tensorflow-model)
+    - [27.3. Refactoring the Input](#273-refactoring-the-input)
+- [Jupyter Notebook Tips](#jupyter-notebook-tips)
+
+### V - [Labs](#labs)
+
+- [15. Logistic Regression](#15-logistic-regression)
+- [16. MNIST & KNN](#16-mnist--knn)
+- [17. Neural Network Automobile Prices](#17-neural-network-automobile-prices)
+- [18. Iris flower DNN Classifier](#18-iris-flower-dnn-classifier)
+- [19. Convolution Neural Network](#19-convolution-neural-network)
+- [20. Building a CNN Using Estimator API](#20-building-a-cnn-using-estimator-api)
+- [21. RNNs for Image Classification](#21-rnns-for-image-classification)
+- [22. Sentiment Analysis Using RNNs](#22-sentiment-analysis-using-rnns)
+- [23. K-Means Clustering with 2-D points](#23-k-means-clustering-with-2-d-points)
+- [24. K-Means Clustering with Images](#24-k-means-clustering-with-images)
+- [25. Principal Component Analysis](#25-principal-component-analysis)
+- [26. Stacked Autoencoder Lab](#26-stacked-autoencoder-lab)
+- [27. GCP Taxicab Prediction Lab](#27-gcp-taxicab-prediction-lab)
+  - [27.1. _Data cleaning and exploring_](#271-data-cleaning-and-exploring)
+  - [27.2. _Taxi Cab TensorFlow Model_](#272-taxi-cab-tensorflow-model)
+  - [27.3. Refactoring the Input](#273-refactoring-the-input)
+- [Jupyter Notebook Tips](#jupyter-notebook-tips)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # Introduction
 
-## Main Types of machine learning
+## 1. Main Types of machine learning
 
-### Classification
+### 1.1. Classification
 
 A classification ML-algorithm is one which determines if something belongs to one or more groups.
 
@@ -18,7 +177,7 @@ ML-based classifiers differ from traditional "rule-based" classifiers in that:
 
 **Feature vectors** are the attributes that the ML algorithm focuses on. Each data point is a list, or vector, of features. In a traditional classifier, the experts determine which features to pay attention to.
 
-### Regression
+### 1.2. Regression
 
 Regression, or fitting a curve to a set of data points, is the simplest example of machine learning possible. Linear regression is the simplest form of regression.
 
@@ -26,17 +185,17 @@ The _error_ of regression is calculated by taking the sum of the squares of the 
 
 In the LinearRegressionWithFakeData.ipynb example, the GradientDescentOptimizer library is used to solve the linear regression on a very simple data set to find the best fit line. Optimizer libraries provide simple, out of the box solutions to regression.
 
-### Clustering
+### 1.3. Clustering
 
 Clustering is looking at the input data and trying to find logical grouping within the data.
 
-### Rule extraction
+### 1.4. Rule extraction
 
 Determining implicit rules, or correlational relationships, within the input data.
 
 # Introduction to [TensorFlow](https://www.tensorflow.org/ "TensorFlow docs")
 
-## Computation graph
+## 2. Computation graph
 
 A computation graph, is a directed, acyclic representation of a TensorFlow algorithm. The tensors, the arrows in the graph, flow strictly from left to right and are modified by the nodes within the graph.
 
@@ -56,7 +215,7 @@ or the computation graph via "unrolling" the graph:
 
 Analysis of a computation graph for two distinct nodes, which contain no overlapping dependencies, can be parallelized and even distributed to multiple machines in a cluster or cloud computing application. This can be referred to as "lazy evaluation".
 
-## Tensors
+## 3. Tensors
 
 The "rank", also "order", of a tensor defines it's dimensionality. The order is a zero-indexed integer value, thus a scalar value is a tensor of rank 0.
 
@@ -65,27 +224,27 @@ Tensors connect nodes in a computation graph. A tensor is the central unit of da
 Vectors, which are 1-Dimensional tensor, are defined with one set of square brackets: [1, 3, 5, 7, 9].
 A matrix is a 2-Dimensional tensor, which is denoted by two sets of square brackets: [[1, 2], [2, 3][3, 4 ]].
 
-### Rank of a tensor
+### 3.1. Rank of a tensor
 
 The rank, therefore, can be thought of as the number of square brackets enclosing the set of numbers.
 
-### Shape of a tensor
+### 3.2. Shape of a tensor
 
 The shape of a tensor defines how many elements exist along a certain dimension. For example, the above matrix ([[1, 2], [2, 3][3, 4 ]]) has a shape of [2, 3] (three sets of pairs).
 
-### Data type of a tensor
+### 3.3. Data type of a tensor
 
 The final defining characteristic is the data type: int, float, bool, etc.
 
-## Datatypes in TensorFlow
+## 4. Datatypes in TensorFlow
 
 There are three data types for tensors in TensorFlow: Constants, placeholders, and variables.
 
-### [Constants](https://www.tensorflow.org/api_docs/python/tf/constant "TensorFlow Core -tf.constant")
+### 4.1. [Constants](https://www.tensorflow.org/api_docs/python/tf/constant "TensorFlow Core -tf.constant")
 
 Constants are immutable values used for storing discrete values in TensorFlow.
 
-### Placeholders
+### 4.2. Placeholders
 
 Due to the iterative approach of machine learning algorithms, placeholders are required for the input parameters to assume new values for the current iteration. For example, in the linear regression implementation, placeholders are used to take the values of the x and y coordinates for the data points for each iteration of the algorithm.
 
@@ -93,7 +252,7 @@ Due to the iterative approach of machine learning algorithms, placeholders are r
 
 The placeholders in this computation graph are the input nodes A and B.
 
-### Feed dictionary
+### 4.3. Feed dictionary
 
 For functions in TensorFlow to have a value for the dependent variable, values for the independent variable must be declared. This can be done using a `feed_dict` which is a json object which contains the values for the independent variable used in the operation.
 
@@ -109,7 +268,7 @@ In this simple example, x is the placeholder which is defined as an integer arra
 
 In summary, the dependent variable is instantiated as a `tf.placeholder()` and given discrete values for operations via a `feed_dict()`.
 
-### [Variables](https://www.tensorflow.org/api_docs/python/tf/Variable "TensorFlow Core - tf.Variable")
+### 4.4. [Variables](https://www.tensorflow.org/api_docs/python/tf/Variable "TensorFlow Core - tf.Variable")
 
 While the placeholder assumes the value of the input, a variable is declared to hold the constantly changing value of the result. Variables in TensorFlow must be first instantiated by declaring
 
@@ -124,19 +283,19 @@ or on a specific variable using:
 
 The code used in this course was written in TensorFlow v. 1.x. View [this guide](https://www.tensorflow.org/guide/migrate "Migrate your TensorFlow 1 code to TensorFlow 2") for specific instructions on updating code to TensorFlow 2.x.
 
-## Multithreading
+## 5. Multithreading
 
 TensorFlow supports built-in multi-threading via the `tf.train.coordinator()` and `tf.train.start_queue_runners()` functions which handle the threads and dispatch resources as needed to complete the image rendering and manipulation.
 
 Calling `tf.train.coordinator().request_stop()` and `tf.train.coordinator().request_stop()` will have the python interpretor wait for the tasks to complete before continuing.
 
-## Working with Images
+## 6. Working with Images
 
 In TensorFlow, working with images depends on using neural networks to perform image recognition. The pixels themselves, the fundamental building blocks of images, are converted to tensors using image recognition in the neural network algorithm.
 
 Image recognition using neural networks is accomplished by feeding a corpus of images into a feature selection and classification algorithm, the output of which is an ML-based classifier (as discussed in [neural networks](#neural-networks)). This classifier can then be applied to a new image to produce a classification label. Machine learning is accomplished by first training a model, then using the corpus of images (the training data) to tweak and optimize the parameters in that model, and then you have the classifier which can be used on a new image.
 
-### Images as Tensors
+### 6.1. Images as Tensors
 
 The individual pixels of an image, as described above, are converted to tensors which can be used in the TensorFlow application. Each pixel holds a value based on the type of image. For grayscale images, the pixel holds a value between 0-1 to describe the level of saturation of gray in that pixel. RGB (**R**ed, **G**reen, **B**lue) is another typical form of color encoding. For RGB encoding, three values are required to describe the color in each pixel. For pure red, the numerical representation in RGB encoding would be (255, 0, 0). Likewise, blue would be (0, 0 255) and green
 (0, 255, 0). These values are also called **channels** which represent the color in a pixel.
@@ -149,7 +308,7 @@ In the above image, the left tensor is a grayscale image, whereas the right tens
 
 TensorFlow typically deals with 4-Dimensional shape vector representation of images, where the first value is the number of images in the list. For example, a list of 10 of the 6 pixel by 6 pixel images above with 3-channel color representation would have a shape vector of (10, 6, 6, 3) - 10 images, of 6 x 6 pixel size, and 3-channel color representation respectively.
 
-### Compiling images into a list
+### 6.2. Compiling images into a list
 
 Calling `tf.stack()` on an array of images will convert a list of 3-D tensors into a single 4-D tensor. For example, two-(224, 224, 3) tensors will become (2, 224, 224, 3) which is an array of two 224 pixel x 224 pixel, three-channel image tensors.
 
@@ -157,7 +316,9 @@ Calling `tf.stack()` on an array of images will convert a list of 3-D tensors in
 
 A machine learning algorithm is one which is able to learn from data. "Learning" is defined as a computer program with respect to some class of tasks T, and performance measure P which improves with experience E. This performance measure could be accuracy in a classification algorithm, residual variance in regression, or a number of other metrics.
 
-## K-nearest-neighbor Algorithm
+## 7. Clustering
+
+### 7.1. K-nearest-neighbor Algorithm
 
 The K-nearest-neighbor (KNN) algorithm is a supervised algorithm which uses the corpus of data to identify the closest image to the input. The algorithm accomplishes this using distance measures. Since the image as a tensor is simply a matrix of values, the distance between an input image and a training data image can be computed just like with regression. Euclidean, Hamming, and Manhattan distance measures are three examples of distance measures. The Manhattan distance, also called the L1 distance, is the preferred method for dealing with distances in discrete space. This distance is found by counting the number of steps in each direction between two points.
 
@@ -171,13 +332,13 @@ In general, there are two types of ML algorithms:
 
 The Modified National Institute of Standards handwritten digit dataset, which is freely available for use [here](http://yann.lecun.com/exdb/mnist/index.html) contains 60,000 handwritten digits which we will analyze using the K-nearest-neighbor machine-learning algorithm. Each image is (28, 28, 1) and has a corresponding label containing the number in the image which can be used to optimize and improve our algorithm.
 
-## Regression
+## 8. Regression
 
-### Linear Regression
+### 8.1. Linear Regression
 
 Linear regression is the simplest form of regression which is an approach to linearly model the relationship between a dependent variable and one or more independent variables.
 
-### Implementing Linear Regression
+#### 8.1.1. _Implementing Linear Regression_
 
 Linear regression can be implemented using a simple neural network of one neuron containing a linear activation function. The implementation of an ML-based regression algorithm is as follows:
 
@@ -191,7 +352,7 @@ Linear regression can be implemented using a simple neural network of one neuron
 
 An **epoch** is each iteration or step of the optimizer, and the batch size is the number of data points given to the optimizer for each epoch. Stochastic gradient descent optimizers use only one data point at a time, while mini-batch and batch gradient descent optimizers use a subset or the entirety of the data points, respectively, for each iteration. The goal of the optimizer is to minimize the cost function of the regression.
 
-### Logistic Regression
+### 8.2. Logistic Regression
 
 Linear regression seeks to quantify effects given causes, while logistic regression seeks to quantify the probability of effects given causes. For this reason, logistic regression is also known as linear classification.
 
@@ -206,7 +367,7 @@ Logistic regression uses a probability function which results in an increasing p
 
 Logistic regression requires a categorical dependent or y-variable, and can use a continuous or categorical x-variable just like linear regression. Logistic regression seeks to fit the data to an S-curve by solving for the optimal values of the A and B variables. Logistic regression can be converted to a linear form by taking the log transformation of the probability equation. This is known as the logit equation, which is defined as the natural log of the odds function.
 
-### Implementing Logistic Regression
+#### 8.2.1. _Implementing Logistic Regression_
 
 Logistic regression varies from linear regression implementation in two primary ways as described above:
 
@@ -229,7 +390,7 @@ The cross-entropy cost function for logistic regression can be visualized by ima
 
 ![crossEntropyVisualized](./markdownImages/crossEntropyVisualized.png)
 
-### Estimators in TensorFlow
+### 8.3. Estimators in TensorFlow
 
 The [Estimators](https://www.tensorflow.org/guide/estimator "TensorFlow Core - Estimators") API in TensorFlow which provide encapsulation of training, evaluating, predicting, and exporting your TensorFlow ML-algorithm. Estimators exchange data directly with the input function, which transmits data to and from the feature vector. The estimator then handles instantiating the optimizer, fetching the training data, defining the cost function, running the optimization, and finally returning a trained model.
 
@@ -251,9 +412,9 @@ The network contains complex interconnects between simple neurons. Different con
 
 The values of W and b, which are variables, are determined by TensorFlow in the training process. The objective of the training process is to determine the optimal values of W and b for each neuron. This is accomplished using the cost function, the optimizer, and run for a set number of iterations, all which are specified by the developer. During the training process, outputs from the deeper layers must be fed back to the earlier layers to determine the optimal values, this is known as back propogation. The activation function, the second step of the neuron-level operation, allows neural networks to perform linear or non-linear transformations.
 
-## Neural Network Basics
+## 9. Neural Network Basics
 
-### Neuronal Operations
+### 9.1. Neuronal Operations
 
 A single neuron can be classified as active if a change in the input to that neuron results in a change in the output of the neuron. If any arbitrary change to an input does not cause a change in the output, it can be said to be dead or inactive. The output of one neuron is also the input to one or many neurons in a subsequent layer. The weights on an input to a neuron define how sensitive the neuron is to that particular input. The higher the weight of an input, the more sensitive that neuron is to the input. "Neurons that fire together wire together".
 
@@ -267,11 +428,11 @@ Training via back propogation is a way to feed the error and output of the optim
 
 ![backPropagation](./markdownImages/backPropagation.png)
 
-### Hyperparameters
+### 9.2. Hyperparameters
 
 Hyperparameters in neural networks are design decisions made by the developer to improve the performance of a neural network model. Examples of these hyperparameters are: network topology (neuron interconnections), number of neural layers, number of neurons within each layer, and the activation function used in the neuronal operation. Hyperparameters are design decisions, or inputs, used in the actual model, whereas model parameters are the weights and biases determined during the training process. Additionally, model parameters are measured using validation datasets to find the best possible model, while hyperparameter tuning is used to generate the model which is used to validate the datasets.
 
-### Problems with Neural Networks
+## 10. Problems with Neural Networks
 
 Neural networks are prone to several problems which cause a model to fail to be able to perform its task effectively. One is vanishing gradient, which is the term used when the loss function fails to adjust between iterations. If the gradient, or result of the loss function does not change, the iterative process to determine W and b fails to optimize correctly and will converge to an inaccurate result. The converse of this is the exploding gradient problem where the gradient moves abruptly or explodes causing diverging solutions and an inaccurate model.
 
@@ -285,7 +446,7 @@ Saturation occurs when the output of the activation function plateaus or is unch
 
 The ReLU activation function also has a saturation region for small negative values. The ELU activation function, which has a small exponential value for the negative region, is the preferred method to dealing with the nonresponsive predisposition of the ReLU function.
 
-### Overfitting and Underfitting
+### 10.1. Overfitting and Underfitting
 
 Overfitting the curve occurs when a model fits the training data too closely, but cannot accurately predict test data. This model is said to have low bias error, where few assumptions are made about the underlying data, but a high variance error, or high changes to the model with differing training data sets. An overfitted model is too complex, and too much importance is placed on the training data. The opposite is an underfitted model, which makes many assumptions about the training data, and does not change much when the training data is changed, and is too simple. Neural networks are prone to overfitting, and thus high variance. This is why it is important to test the model against a test set of data to determine the variance.
 
@@ -297,7 +458,7 @@ With _cross-validation_ comes hyperparameter tuning, and running training data t
 
 "_Dropout_", which is deactivating a random subset of the the neurons within a NN, causes the neurons which remain on during a particular training phase to recognize patterns in the data using a different network configuration. This results in a more robust NN which is less prone to overfitting.
 
-### Prediction Accuracy
+### 10.2. Prediction Accuracy
 
 Prediction accuracy is the primary metric for validating the efficacy of a ML-algorithm. Accuracy itself, however, is ineffective when dealing with a _skewed dataset_, that is one where certain labels are far more or far less common than other labels. Accuracy can be computed by dividing the sum of the true positive and negative results (that is, where the predicted label = actual label) divided by the total number of predictions.
 
@@ -315,7 +476,7 @@ Precision = TP / (TP + FP)
 
 Recall = TP / (TP + FN)
 
-### Decision Threshold
+### 10.3. Decision Threshold
 
 The decision threshold is the point on a logistic curve at which the model predicts one label for probabilities lower than the threshold and the other label for probabilities higher than the threshold (for binary classifiers). This can also be thought of as an s-curve with Precision on the y-axis and conservativeness on the x-axis. As conservativeness increases, so too does prediction. However, a model which is too precise is also too constrained to provide accurate results; for instance, a decision threshold of 1 - or 100% - will result in only negative results. On the other hand, a model which is too liberal in predicting positive results, having too low of a decision threshold, results in an all positive result set but very low precision.
 
@@ -323,7 +484,7 @@ Plotting recall versus conservativeness results in a reciprocal graph to Precisi
 
 ![precisionRecallTradeoff](./markdownImages/precisionRecallTradeoff.png)
 
-### Choosing Model Characteristics
+### 10.4. Choosing Model Characteristics
 
 How then are we to choose a model which can maximize true results without making the negative results too common?
 
@@ -337,11 +498,11 @@ The F1 score will be closer to the lower of recall and precision and favors an e
 
 ROC curve - or receiver operator characteristic - is a plot of the true positive rate versus the false positive rate. The ideal model has a very high TP rate, and a FP rate of zero. The ROC curve can be computed by tweaking the threshold value iteratively and computing the True Positive (TP) rate and False Positive (FP) rate, and choosing the point at the top-left of the curve.
 
-## Convolutional Neural Networks
+## 11. Convolutional Neural Networks
 
 The convolutional neural network is ideal for processing images. A convolutional neural network is based on the visual cortex in humans. The neurons in our own brain respond to stimuli wihin it's own local receptive field, and disregard everything outside of that. These stimulated responses are then aggregated by other neurons to form patterns. For image processing in a neural network, the lower-level layers focus on larger scale details within the image, and higher-level layers focus on progressively more granular details. Within convolutional neural networks (CNNs) there are two basic types of layers: _convolution_ layers, which respond to stimuli in the local receptive field, and _pooling_, which subsamples the inputs to previous layers.
 
-### Convolution
+### 11.1. Convolution
 
 The most important part of a CNN are the convolution layers as the local receptive field stimuli and response are the building blocks of CNNs. Convolution can be thought of as a sliding window function applied to a matrix. For image processing, the matrix is a 2-D matrix and the function is a filter or kernel function. For a simple 6x6 matrix, we choose a 3x3 kernel as a design decision when choosing a CNN. The kernel, which can be seen in the center of the diagram below, is then overlaid with the matrix and slid sequentially from the top-left, n number of spaces left and down as chosen by the algorithm design. The sum of the unfiltered values for each step, which correlate to the local receptive field, are then represented in a 4x4 convolution matrix (right-side of the diagram).
 
@@ -349,17 +510,17 @@ The most important part of a CNN are the convolution layers as the local recepti
 
 [The choice of the kernel function](http://aishack.in/tutorials/image-convolution-examples) depends on the application. For example, if the goal is to acheive a blurring effect, a kernel function which averages neighboring pixels would be chosen to acheive that effect. Kernel functions can be designed to acheive many complex image effects, such as edge and line detection.
 
-### Design Features of CNNs
+### 11.2. Design Features of CNNs
 
 _Zero padding_, adding a certain number of rows and columns of zeroes to the edges of your data, is used in order to have every element represented in the filtered result. Without zero padding, some elements will not be represented in the convolution matrix. Zero padding can also be used to acheive _wide-convolution_ which is when a convolution matrix is larger than the input matrix.
 
 _Stride size_ is the number of rows to skip when moving horizontally and columns to move when moving vertically when sliding the kernel function. This determines how much of the local receptive field which will overlap when performing convolution. The lower the stride size, the greater the overlap.
 
-### CNNs versus DNNs
+### 11.3. CNNs versus DNNs
 
 Dense neural networks, those which have an interconnection between each neuron of one layer with all neurons of a previous layer, have far too much complexity to be used effectively in image processing. For a 100 pixel by 100 pixel image, you would need 10,000 neurons in the first layer. With a dense neural network, this results in millions of interconnections by the second layer - millions of parameters to tune during training! CNNs, by way of the use of local receptive fields, have dramatically fewer parameters versus DNNs since they focus on only a small area within the image rather than trying to determine patters for every part of the image at once. CNNs also identify patterns independent of location whereas DNNs will inherently parse location information as well as image data due to their architecture.
 
-### Feature Maps
+### 11.4. Feature Maps
 
 Convolutional layers are comprised of feature maps, which are themselves comprised of a number of neurons, each having received values based on the values of the local receptive field of the kernel function from the previous layer. Because the feature map is created from the same kernel function, all neurons within each feature map have the same weights and biases. CNNs are sparse neural networks since there is not a 1:1 correlation between neurons in two adjacent layers.
 
@@ -367,23 +528,23 @@ Each neuron's receptive field includes all the feature maps of all previous laye
 
 ![explodedViewCNN](./markdownImages/explodedViewCNN.png)
 
-### Pooling Layers
+### 11.5. Pooling Layers
 
 Pooling layers subsample inputs into convolution layers. The neurons in a pooling layer have no associated weights or biases. A pooling layer neuron simply applies an aggregate function to all inputs. Pooling layers greatly reduce time and memory usage during training by reducing the numbers of parameters via aggregation and also mitigate overfitting to test data via subsampling. Pooling layers also allow NN to recognize features indpendent of location. Pooling is typically done on each channel independently.
 
-### CNN Architectures
+### 11.6. CNN Architectures
 
 CNNs are typically comprised of alternating convolutional and pooling layers. The output of each of the convolutional and pooling layers is an image, and the images shrink in size successively due to the subsampling done in the pooling layers. Each successive output image is also deeper due to the feature maps in the convolutional layer. The output of the entire set of these convolutional and pooling layers is then fed into a regular, feed-forward dense neural network which has a few, fully-connected layers each with a ReLU activation function and finally a SoftMax prediction layer to provide classification. For digit classification, there are 10 prediction labels, for image classification there can be more or fewer prediction labels.
 
-## Recurrent Neural Networks
+## 12. Recurrent Neural Networks
 
-### Recurrent Neurons
+### 12.1. Recurrent Neurons
 
 Recurrent Neural Networks (RNNs) are based upon a recurrent neuron, that is a neuron which has memory or state. Unlike normal neural networks or convolutional neural networks the output of a recurrent neuron is fed back in as an input to the same neuron. This feedback makes RNNs well-suited for time series data. RNNs are known as auto-regressive because the output at time `t` is dependent on the output at time `t-1`.
 
 ![recurrentNeuron](./markdownImages/recurrentNeuron.png)
 
-### Recurrent vs Normal Neuron
+### 12.2. Recurrent vs Normal Neuron
 
 For a regular neuron, the input is a vector which produces a scalar output. However, a recurrent neuron with an input feature vector of [X<sub>0</sub>, X<sub>1</sub>, ..., X<sub>t</sub>] would produce an output vector of [Y<sub>0</sub>, Y<sub>1</sub>, ..., Y<sub>t</sub>]. Additionally, while a regular neuron has one weight vector, a recurrent neuron will have two: W<sub>y</sub> for the previous y-input, and W<sub>x</sub> for the indpendent x-input.
 
@@ -393,13 +554,13 @@ As recurrent neurons primarily deal with time-series data, it can be useful to t
 
 A layer within an RNN is generally a group of recurrent neurons, known as a RNN or memory cell. The same process for unrolling through time is performed on this memory cell for as many time instances as there are datapoints.
 
-### Training an RNN
+### 12.3. Training an RNN
 
 Gradient descent optimizers, which seek to minimize the mean square error (MSE) for values of W and b, are used in RNNs as well. However, training of RNNs is accomplished through back-propagation through time (BPTT). BPTT is very similar to back-propagation, however BPTT has a few more details to consider as we unroll the RNN through time. The number of layers needed for an RNN depends on the number of time periods you wish to study. Because RNNs can be unrolled very far back in time, RNNs which rely upon time periods in the very distant past are especially prone to vanishing and exploding gradients as the gradient needs to be propagated back through each time instance.
 
 One option to mitigate vanishing and exploding gradients in RNNs is to use truncated BPTT. Truncated BPTT uses only a subset of data points for time periods in the very distant past which can reduce the accuracy of the model. Another option is to use long short-term memory (LTSM) cells. LTSM cells were developed specifically to deal with vanishing and exploding gradients.
 
-### Long Memory Neurons
+### 12.4. Long Memory Neurons
 
 In order to combat the problems with vanishing and exploding gradients in deep recurrent neural networks, the state of a memory cell must be expanded to include long-term state. Long memory neurons, neurons that hold additional state for the distant past, have several advantages over recurrent neurons. In training, the gradients converge more easily and can be propagated faster through the layers leading to a convergent model more quickly. And for long memory neurons in prediction, the advantages are in not requiring truncating of inputs during the BPTT. Truncated BPTT can vastly decrease prediction performance as the output may be dependent upon the longer-term inputs which are removed by truncated BPTT.
 
@@ -413,7 +574,7 @@ These components are acheived using four distinct and fully-connected neural net
 
 Some variants of LSTM cells are peephole connections, which are LSTM cells that store state for more than one period, and Gated Recurrent Unit (GRU) which are a simplified LSTM which stores only one state vector for both long and short-term memory. GRUs have fewer internal gates and NNs and acheive better performance over a basic LSTM cell.
 
-### Text as Sequential Data
+### 12.5. Text as Sequential Data
 
 RNNs are the ideal network for dealing with text data whether it be prediction such as autocompleting a sentence, language translation, or text classification which can also be called natural language processing or sentiment analysis. RNNs are ideal for dealing with sequential data, but then the question is How can one represent text as sequential data in a meaningful manner. First we view the text document as an ordered sequence of words. Each individual word must be encoded as a number. To accomplish this, there are a number of text embeddings available: one-hot notation, text frequency inverse-document frequency (TF-IDF), and the most popular method word embeddings.
 
@@ -423,19 +584,19 @@ RNNs are the ideal network for dealing with text data whether it be prediction s
 
 **Word embeddings** - an ML-based algorithm which require training on a very large corpus of text data. Inputting a word to this classifier algorithm produces a low-dimensionality word embedding which is similar for two words which have a close relationship such as "London" and another city. Popular examples of word embedding models are Word2Vec which uses simple neural networks, GloVe - Global Vectors for Word Vectorization which uses word-to-word co-occurance matrix and nearest neighbors algorithm for word relationships.
 
-## Supervised and Unsupervised Learning
+## 13. Supervised and Unsupervised Learning
 
 Thus far in the course, we have been conducting supervised machine learning, where labels associated with the data is provided and used to correct the algorithm during a training phase. Unsupervised learning does not include real labels or a testing phase. Unsupervised learning is performed by looking at the data and trying to find patterns within the data. These are known as "self-discovering" algorithms. Unsupervised models require precise and accurate setup to model the structure and similarities within the data. Two primary examples of unsupervised learning are clustering, or identifying patters in data items, and principal component analysis - also known as autoencoding or latent factor analysis - is where you seek to identify the latent factors that drive data.
 
-### Clustering Algorithms
+### 13.1. Clustering Algorithms
 
 Clustering algorithms look within the data to determine commanalities within the data which can be used to group similar data items logically. To perform clustering on huge or complex datasets, we seek to represent attributes as numbers. This could be a product ID to represent a sale item on a website, height, weight, and age to represent people. The number of attributes defines the number of axis needed to plot each datapoint; i.e. for n attributes, you will need an n-dimensional hypercube. Clustering these numerical representations into similar groups for similar attributes and different groups for attributes which are dissimilar. Then the distances between two points in the n-dimensional space can represent the relative similarity or dissimilarity between those points. The goal of clustering is to minimize inter-cluster similiarity (similarity between two clusters), and maximize intra-cluster similiarity (similiarity between points in the same group).
 
-### K-Means Clustering
+#### 13.1.1. K-Means Clustering
 
-Many clustering algorithms for grouping data exist, K-Means clustering is a popular example of a clustering algorithm. The objective of K-Means clustering is to determine k number of clusters for n number of data points and optimize the total reconstruction error. This is performed by assigning each cluster a centroid and computing the distance between each point to it's centroid. The mean of these distances is then computed, and the centroid is then moved to the position of this mean. Distances are then computed between each point and all centroids in order to facilitate points moving to a closer centroid. This process is then repeated iteratively until points no longer move to another cluster which indicates a convergent model. These centroids, also known as reference vectors, are then indicative of every data point within the cluster.
+Many clustering algorithms for grouping data exist. K-Means clustering is a popular example of a clustering algorithm. The objective of K-Means clustering is to determine k number of clusters for n number of data points and optimize the total reconstruction error. This is performed by assigning each cluster a centroid and computing the distance between each point to it's centroid. The mean of these distances is then computed, and the centroid is then moved to the position of this mean. Distances are then computed between each point and all centroids in order to facilitate points moving to a closer centroid. This process is then repeated iteratively until points no longer move to another cluster which indicates a convergent model. These centroids, also known as reference vectors, are then indicative of every data point within the cluster.
 
-### Hyperparameters
+##### Hyperparameters for K-Means Clustering
 
 The number of clusters, k, is the primary hyperparameter for K-Means clustering. The value for k is determined by varying the number of clusters and computing the total reconstruction error for that model. Plotting the total reconstruction error against the value of k and analyzing the graph to find the "elbow" - that is the point at which the total reconstruction error drops dramatically.
 
@@ -443,7 +604,7 @@ The initial values are the second hyperparameter for K-Means clustering. Randoml
 
 The third hyperparameter is the method for calculating distance. Euclidean, mahalanobis, and cosine distances are all options for computing distances each with their own drawbacks. For Euclidean distance, the centroid might not coincide with a datapoint. Mahalanobis distance requires normalizing each dimension to have equal variance.
 
-## Autoencoders and Principal Components Analysis
+## 14. Autoencoders and Principal Components Analysis
 
 Principal components analysis is a statistical method for reducing the number of dimensions needed to accurately represent a dataset. The first principal component is performed by projecting all datapoints onto a single axis. The greater the distance between the points, the better the projection. The second principal component is orthoganal to the first principal component and, by definition, has less distance between the datapoints when compared with the first principal component. Consider a matrix X of datapoints contained within k columns by n rows. The goal is to reduce this data into it's principal components using PCA Factor Reduction. After performing PCA, we obtain k rows by n columns of another matrix, F. However the data columns, F<sub>i</sub> for i in k, after performing PCA are highly uncorrelated. F<sub>1</sub> and F<sub>2</sub> contain the vast majority of total variance contained within the original data.
 
@@ -453,25 +614,25 @@ Reconstructing the original data from the principal components is performed by m
 
 Autoencoders in machine learning are neural networks that learn efficient representation using PCAs. Autoencoders attempt to recreate the input at the output by performing an unsupervised version of supervised learning, that is optimizing a cost function, without the input labels afforded to supervised learning. Autoencoders attempt to uncover latent factors L which drive the data. Unsupervised learning is often a preparatory step before using a supervised learning algorithm.
 
-### Autoencoders Neural Network Architecture
+### 14.1. Autoencoders Neural Network Architecture
 
 As described before, autoencoders are the ultimate "look-within" unsupervised ML technique which try to reconstruct the input at the output. Since the goal is to reproduce the input, the auto-encoder must be designed such that the output layer is an exact duplicate of the input layer. The trivial solution is a single layer where the input passes directly to the output. This neural network succeeds in "reproducing" the input, but the NN does not learn anything. An undercomplete autoencoder has a smaller, hidden layer - also called a coding layer - sandwiched between the input and output layer. The output produced, while ideally will be an exact copy of the input, will likely have some error, e.
 
 Design choices for an autoencoder NN are the activation function to the neurons within the hidden layer, as well as the cost function to optimize during training. Principal components analysis are autoencoders without an activation function on hidden layer neurons (that is, linear neurons) and designed to minimize the mean-square error.
 
-### Stacked Autoencoders
+### 14.2. Stacked Autoencoders
 
 Autoencoders, as stated earlier, are used as a pre-training step before performing supervised learning to find hidden patterns in the training data. Adding more hidden layers to an autoencoder NN, or "stacking" the autoencoders, will result in a stronger or more robust autoencoder NN which is capable of learning more complex patterns in data. The center hidden layer remains the smallest (having the fewest neurons) with increasingly large, symmetrical layers as you move out from the center. Overfitting the data is a very serious concern with stacked autoencoders. "Tying" the weights and biases of symmetric hidden layers (layers 1 and 3 in the below image)to be the same is one method to combat stacked autoencoders overfitting the data. Another method is to train each hidden layer separately.
 
 ![stackedAutoencoders](./markdownImages/stackedAutoencoders.png)
 
-### Denoising Autoencoders
+### 14.3. Denoising Autoencoders
 
 This tool is intended to test an autoencoders efficacy as it is required to discern the signal from the random noise which we add to the input signal. Since the input to the autoencoder and the output are not 1:1, the autoencoder cannot just simply copy over the input signal to acheive the correct result.
 
 # Labs
 
-## Logistic Regression
+## 15. Logistic Regression
 
 For the logistic regression lab, we are utilizing the single neuron implementation of logistic regression in TensorFlow to determine the probability of Google stock having an increasing or decreasing return from one month to the neYt by classifying the returns of the S&P 500 index as our independent variable. We have used pandas and numpy in determining the baseline, and will compare that result to the ML-based logistic regression.
 
@@ -485,23 +646,23 @@ tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
 We use `tf.reduce_mean` on this softmax activation function to compute our cross-entropy calculation to compare the probability distributions of our predicted value against the actual value (Google stock increasing/decreasing versus S&P increasing/decreasing).
 
-## MNIST & KNN
+## 16. MNIST & KNN
 
 For this lab we are using the MNIST dataset of hand-written numbers. In our comparison using the KNN algorithm, the 28 pixel x 28 pixel image tensors are flattened into vectors of length 784, which are then compared against the training data by summing the training data vector and the negation of the test data in 5,000-element chunks. This results in 5,000 vectors of length 784 containing the L1 distance between each pixel in the test image against the MNIST training data chunk. The sum of the absolute value of these vectors is then computed and reduced to a single-element vector per distance vector using `tf.abs()` and `tf.reduce_sum()`.
 
 For K = 1, `numpy.argmin()` can be used to find the single nearest neighbor for our test image, then the label of the nearest neighbor from the training data can be used to compare against the test digit to perform the supervised optimization of the algorithm.
 
-## Neural Network Automobile Prices
+## 17. Neural Network Automobile Prices
 
 For this lab we used a public dataset of automobiles from UCI as the training data to an ML-based predictor of automobile price given various categorical and numerical features from the dataset such as make, engine type, miles-per-gallon, etc. We created a pandas dataframe to read in and clean up the data and passed it into TensorFlow using `tf.estimator.inputs.pandas_input_fn()` which is a built-in method in TensorFlow which takes in a pandas data frame as an input. We defined `feature_columns` as an array of both categorical and numerical column data as unique entries for each column in the dataset. Scaling the price column to tens of thousands of dollars rather than the full price was used to improve accuracy as TensorFlow works better with smaller numbers. These scaled values were converted back to dollars after the training.
 
 We tweaked the neural network configuration using the `hidden_units` parameter of the `tf.estimator.DNNRegressor()` method between a two-layer and a three-layer configuration to demonstrate the effectiveness of each on our resulting training model. The accuracy improved substantially when using a three-layer DNN (dense neural network) with the configuration of [24, 16, 24] neurons rather than the two-layer configuration of [20, 20] neurons.
 
-## Iris flower DNN Classifier
+## 18. Iris flower DNN Classifier
 
 For this lab, we are working with the iris data set. The objective of this ML model is to predict the label of the iris based on the features which are the Sepal length and width and petal length and width. Rather than using pandas for this lab, we are using TensorFlow to iterate over the .csv dataset by invoking `tf.decode_csv()` which extracts the header data from the .csv file. The features are created by zipping the feature names into a dictionary for each line in the iterator. We invoke `tf.data.TextLineDataset().map()` in our helper method `get_features_labels(filename, shuffle=False, repeat_count=1)` which allows for shuffling to randomize the order of the data, `repeat_count` allows for copying of the dataset, and we specify the `batch_size` as 32. We use the `dataset.make_one_shot_iterator()` method which iterates over the dataset exactly once.
 
-## Convolution Neural Network
+## 19. Convolution Neural Network
 
 For this lab we are using the publicly available house number dataset from Stanford. The house numbers are in a matlab file format, which requires additional python libraries `scipy` and `scipy.io` to read in the files and `matplotlib` and `matplotlib.pyplot` which allows for inline plotting in IPythonNotebooks in addition to the usual numpy, pandas, and tensorflow libraries. Similar to the MNIST number lab, the goal is to create an ML-based classifier which can predict the number represented in an image. However, the shape of our image tensor is now (32, 32, 3) which is a larger, color image than the MNIST dataset.
 
@@ -618,7 +779,7 @@ The output for each epoch is as follows:
 
 9 Train accuracy: 0.87 Test accuracy: 0.7673333
 
-## Building a CNN Using Estimator API
+## 20. Building a CNN Using Estimator API
 
 In this lab we are returning to the MNIST dataset, however this time we will be constructing a custom convolutional neural network (CNN) using TensorFlow's Estimator API. The MNIST dataset contains images of a single digit which are 28 pixels x 28 pixels in grayscale, or a (28, 28, 1) image tensor. Once again in this lab, we set up the needed import statements and pull the dataset directly from Google. We define variables for the height, width, and channels of the images, and also the various features of each convolutional layer wihin the CNN: the number of feature maps, the kernel and stride sizes, and zero padding.
 
@@ -641,7 +802,7 @@ if mode == tf.estimator.ModeKeys.PREDICT:
 
 Otherwise we will calculate the loss, again using `tf.reduce_mean()` and setup the optimizer, once again we are using the Adam optimizer, and minimize the loss as done in the previous CNN lab. We set our optimizer to run for 2000 steps with a batch size of 100 and print out the loss for every 100 steps. After running a test model, we obtain an accuracy of 98.6% - far higher than the previous CNN lab due to the decreased complexity of the dataset.
 
-## RNNs for Image Classification
+## 21. RNNs for Image Classification
 
 For this lab we are using the MNIST dataset using recurrent neural networks (RNNs). We begin by importing the modules for the lab: TensorFlow, matplotlib, and numpy as well as the MNIST dataset downloaded directly from the TensorFlow example tutorial. Next we reshape the images to a 28 pixel x 28 pixel grayscale image using
 
@@ -678,7 +839,7 @@ training_op = optimizer.minimize(loss)
 
 We initialize all of our variables and reshape the test digits using the helper method declared above. For our TensorFlow session, we set up 10 epochs of 150 images per iteration. We set up the feed dictionaries to pass all x and y-values into the optimizer, and the training and test accuracy is computed at each epoch. For this simple dataset, we were able to acheive training accuracy of >97% and test accuracy of >95%.
 
-## Sentiment Analysis Using RNNs
+## 22. Sentiment Analysis Using RNNs
 
 For this lab we are working with data from the movie review site rotten tomatoes hosted on cornell.edu. The problem we are solving is a sentiment analysis one where we are classifying reviews as either positive or negative. We first declare a couple of helper functions to get the reviews and the labels for the positive and negative reviews as well as combining the combined data and labels.
 
@@ -751,7 +912,7 @@ Epoch: 19, Test Loss: 2.0, Test Acc: 0.74489
 Epoch: 20, Test Loss: 2.1, Test Acc: 0.7503
 ```
 
-## K-Means Clustering with 2-D points
+## 23. K-Means Clustering with 2-D points
 
 This lab is meant to demonstrate how K-Means clustering is performed. The dataset we use for this lab is generated using `np.array([[random.randint(1, 1000) for in in range(2)], dtype=np.float32)` for the first group, the following groups having index numbers 700 to 2000 and 1700 to 3000 respectively. The values for these data points can be seen in the image of the plot below.
 
@@ -782,7 +943,7 @@ Several features of our K-Means clustering estimator were generated randomly, us
 
 We then perform testing on this clustering algorithm to predict the cluster location for a given point such as [1700, 1700]. This returns cluster[1] which is the center-most cluster in the above plot.
 
-## K-Means Clustering with Images
+## 24. K-Means Clustering with Images
 
 This lab once again uses the MNIST handwritten data set to test prediction accuracy using K-Means clustering with an image-based dataset. We begin by downloading the MNIST dataset and declare batches for the training as well as the test data. We then set up our clustering algorithm once again using `k_means_estimator = kmeans.KMeansClustering(num_clusters=10)`. We again use a lambda function to feed the training digits into the estimator defined in the previous line `fit = k_means_estimator.fit(input_fn=lambda: input_fn(training_digits), steps=1000)`. Once this k-means clustering completes, we can return `clusters = k_means_estimator.clusters()` which will return the cluster centers. These cluster centers are themselves 28 pixel x 28 pixel images and do not need to lie upon an actual datapoint. We then plot these images using `matplotlib` and interpret the shown digit to assign a label to each cluster center image.
 
@@ -820,7 +981,7 @@ def display_accuracy(cluster_labels, cluster_idx, actual_labels):
     print ("% accurate predictions: ", pctAccuracy)
 ```
 
-## Principal Component Analysis
+## 25. Principal Component Analysis
 
 For this lab we are performing PCA on stock market data. We import the necessary modules, tensorflow, pandas, numpy, and matplotlib. Next we read in the stock data csv file using pandas into a dataframe called `prices` and format the 'Date' column from 'DD-MMM-YY' format to a string 'YYYY-MM-DD' and sort by that date. We also use trim the dataframe to use only three stocks instead of the six included in the file originally. Next we calculate the returns on our three chosen stocks using the following command which iterates over the datatypes contained in the dataframe and calculates the percent change from the previous entry if the value is an integer or a float.
 
@@ -884,7 +1045,7 @@ Constructing the neural network is fairly trivial. We define `n_inputs = 3` for 
  [-1.75069897,  0.65808424, -1.74414266]]
 ```
 
-## Stacked Autoencoder Lab
+## 26. Stacked Autoencoder Lab
 
 For this lab, we are attempting to recreate our input data, which is the MNIST handwritten dataset, by using stacked autoencoders using dropout to prevent overfitting to the data. Our imports are identical to previous labs, TensorFlow, numpy, matplotlib and the MNIST dataset itself. We again create the `display_digit(digit)` helper function which uses matplotlib to visually display a single digit on screen. We also write a helper function to reconstruct the output, `outputs`, for a given input `X` and display the original image and the output side-by-side. This method is used to test how well our autoencoder reproduces the input without training labels to quickly test as in previous labs.
 
@@ -996,7 +1157,7 @@ Which obtains an output of:
 
 Displaying our input image against our output digit using our `show_reconstructed_digits()` helper function shows how the NN modifies the image from input to output, and can show how dropout affects our final output.
 
-## GCP Taxicab Prediction Lab
+## 27. GCP Taxicab Prediction Lab
 
 This lab utilizes `nyc-tlc:green.trips_2015`, a dataset freely available from Google which contains a great deal of information on NYC taxi cab rides during 2015. Rather than running this code on jupyter notebooks as done in previous labs, we will be using Google Cloud Platform (GCP) for a more real-world TF experience.
 
@@ -1058,7 +1219,7 @@ And again run a Linear regressor with the weights and biases from our saved mode
 [Out]: [46388.035, 49281.36, 52235.11 ]
 ```
 
-### _Data cleaning and exploring_
+### 27.1. _Data cleaning and exploring_
 
 For this lab, we will be using the `nyc-tlc.yellow.trips` dataset which is a [BigQuery public dataset](https://bigquery.cloud.google.com/table/nyc-tlc:yellow.trips "NYC Yellow Trips BigQuery dataset"). We import seaborn, matplotlib, pandas, numpy, and bigquery and begin to query the dataset.
 
@@ -1171,7 +1332,7 @@ Using `create_query(2, 100000)`, we obtain
 [Out]: Final Validation Set RMSE = 7.596693062217029
 ```
 
-### _Taxi Cab TensorFlow Model_
+### 27.2. _Taxi Cab TensorFlow Model_
 
 After obtaining a baseline value in the previous lab, we are now ready to build a linear regressor model to try to improve upon our result obtained from the crude model.
 
@@ -1185,7 +1346,7 @@ This is worse than our crude model! Printing the output of the predicted value f
 
 In an attempt to get our RMSE closer to the \$6 value that we aimed for, we then choose to use a deep neural network design rather than the linear regression model.
 
-### Refactoring the Input
+### 27.3. Refactoring the Input
 
 Now we seek to refactor the input to using TensorFlow dataset API rather than reading csv files to pandas data frames and passing those along. We describe the data as before, with a feature vector called `CSV_COLUMNS` containing `['fare_amount', 'pickuplon', 'pickuplat', 'dropofflon', 'dropofflat', 'passengers', 'key']` and the label column which is the `'fare_amount'` column called `LABEL_COLUMN` . Next we define an `read_dataset()` method which takes 3 parameters: `filename` which specifies the input files, `mode`- either `tf.estimator.ModeKeys.TRAIN` for training or another value for validation or testing, and `batch_size` with a default of 512 entries. Next the `_input_fn()` which will read each file in the list from csv to `tf.data.TextLineDataset` and calls `decode_csv()` to obtain the values for each of the elements of `CSV_COLUMNS` and calls `pop()` on the `LABEL_COLUMN` to remove the y-values from the feature vector. For a `TRAIN` mode, we will shuffle the dataset by `10 * batch_size` to obtain a randomized sample.
 
