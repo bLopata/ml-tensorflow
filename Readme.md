@@ -17,16 +17,15 @@
 ### II - [Introduction to TensorFlow](#introduction-to-tensorflow)
 
 - [2. Computation graph](#2-computation-graph)
-
-  - [3. Tensors](#3-tensors)
-    - [3.1. Rank of a tensor](#31-rank-of-a-tensor)
-    - [3.2. Shape of a tensor](#32-shape-of-a-tensor)
-    - [3.3. Data type of a tensor](#33-data-type-of-a-tensor)
-  - [4. Datatypes in TensorFlow](#4-datatypes-in-tensorflow)
-    - [4.1. Constants](#41-constants)
-    - [4.2. Placeholders](#42-placeholders)
-    - [4.3. Feed dictionary](#43-feed-dictionary)
-    - [4.4. Variables](#44-variables)
+- [3. Tensors](#3-tensors)
+  - [3.1. Rank of a tensor](#31-rank-of-a-tensor)
+  - [3.2. Shape of a tensor](#32-shape-of-a-tensor)
+  - [3.3. Data type of a tensor](#33-data-type-of-a-tensor)
+- [4. Datatypes in TensorFlow](#4-datatypes-in-tensorflow)
+  - [4.1. Constants](#41-constants)
+  - [4.2. Placeholders](#42-placeholders)
+  - [4.3. Feed dictionary](#43-feed-dictionary)
+  - [4.4. Variables](#44-variables)
 
 ### III - [Working with TensorFlow](#working-with-tensorflow)
 
@@ -35,7 +34,7 @@
   - [6.1. Images as Tensors](#61-images-as-tensors)
   - [6.2. Compiling images into a list](#62-compiling-images-into-a-list)
 
-#### III.a [Learning algorithms](#learning-algorithms)
+#### III.a - [Learning algorithms](#learning-algorithms)
 
 - [7. Clustering](#7-clustering)
   - [7.1. K-nearest-neighbor Algorithm](#71-k-nearest-neighbor-algorithm)
@@ -1303,6 +1302,39 @@ Next we create and train the model as performed in the previous step. When we va
 ```
 
 Which is better than the previous model, but still more than our objective of \$6.
+
+Next we will implement the [`tf.estimator.train_and_evaluate()`](https://www.tensorflow.org/api_docs/python/tf/estimator/train_and_evaluate?hl=ko) method to train and evaluate the estimator. The `train_and_evaluate` method takes 3 arguments: the estimator (a linear regressor in our case), the training spec (which specifies the dataset, mode, and number of steps), and lastly the eval spec(which specifies the dataset for evaluation, the mode of `tf.estimator.ModeKeys.EVAL`, and parameters for process queueing).
+
+Calling the method, TensorFlow outputs for every epoch (100 iterations) showing how the loss of our function changes as the model is trained. After 5000 iterations, we obtain
+
+```python
+[Out]: Saving dict for global step 5000: average_loss = 94.4552, global_step = 5000, loss = 37097.28, RMSE = 9.71886
+```
+
+### 27.4 _Cloud MLE_
+
+Now we will implement the Cloud ML engine to allow for distributed training of our dataset. The ML engine allows for a number of advantages over training with traditional methods:
+
+1. Allows for larger datasets.
+2. Provides parameter servers
+3. Improves hyperparameter tuning performance - intractable on a single machine.
+4. Training/serving skew, or reduced performance on the validation set as compared to a training dataset, is reduced by having the same models in training and production.
+5. Decoupling model from the client. Allows for testing a model with a REST api call, for example.
+6. Auto-scale features as dataset or number of requests increases.
+
+Implementing cloud MLE contains distinct differences from running code on a datalab VM instance.
+
+Pre-training
+
+1. First we must modify the TF program to run using distributed TF.
+2. Build python trainer package and place on cloud.
+   a. When a training request is submitted to cloud MLE, the engine will place this trainer package on all instances which are called replicas. One replica is chosen as the parent node for the training.
+   b. The training service allocates resources and monitors the replicas and watches the parent node for completion or failure, at which point it deallocates the resources and returns.
+3. Get access to training and validation data on the cloud.
+
+Training:
+
+1.
 
 # Jupyter Notebook Tips
 
