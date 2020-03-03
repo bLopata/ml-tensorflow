@@ -1334,7 +1334,50 @@ Pre-training
 
 Training:
 
-1.
+The training and prediction services offered by Cloud MLE can be accessed using REST API calls, cloudshell (Google Cloud CLI), or through datalab.
+
+The training package created in the pre-training step can write to our cloud storage "bucket". At the successful conclusion of the training process, a trained model is exported for use in prediction by the exporter framework, and logging is written using stackdriver logging.
+
+Next we open the `cloudmle` notebook, and begin to step through the implementation of the setup steps to run our model training on the Cloud MLE. We set a few string values for our `PROJECT`, `REGION`, and `BUCKET`, and set a few `os.environ` values for our `bash` commands. Then we grant the Cloud MLE service account read/write access to our storage bucket with a `GET` request using curl to `https://ml.googleapis.com/v1/projects/${PROJECT}:getConfig` with our `PROJECT` set above.
+
+There are two main script files for executing the training: `model.py` and `task.py`. `model.py` is largely the same as in the previous labs. `task.py` creates a dictionary object using `argparse.ArgumentParser()` which contains the input arguments, training arguments for building the neural network, and eval arguments for running the training which include: descriptions, default values, required (boolean), and data types. `task.py` then calls `model.train_and_evaluate()` with the specified arguments.
+
+We then execute the python module in our local VM instance from the command line using:
+
+```sh
+python -m trainer.task \
+  --train_data_paths="${PWD}/taxi-train*" \
+  --eval_data_paths=${PWD}/taxi-valid.csv \
+  --output_dir=${PWD}/taxi-trained \
+  --train_steps=1000 --job-dir=./tmp \
+```
+
+After 1000 steps, we obtain:
+
+```python
+[Out]: INFO:tensorflow:Saving dict for global step 1000: average_loss = 186.1359, global_step = 1000, loss = 292419.5
+```
+
+With an average loss of 186.1359, our RMSE is ~13.6. At 5000 steps, `average_loss = 143.53946`, or an RMSE of ~11.98.
+
+We must first write our training data to the storage bucket using `gsutil -m cp ${PWD}/*.csv gs://${BUCKET}/taxifare/smallinput/` command. We then submit the job to Cloud MLE using
+
+```sh
+gcloud ai-platform jobs submit training $JOBNAME \
+   --region=$REGION \
+   --package-path=${PWD}/taxifare/trainer \
+   --job-dir=$OUTDIR \
+   --staging-bucket=gs://$BUCKET \
+   --scale-tier=BASIC \
+   --runtime-version=$TFVERSION \
+   -- \
+   --train_data_paths="gs://${BUCKET}/taxifare/smallinput/taxi-train*" \
+   --eval_data_paths="gs://${BUCKET}/taxifare/smallinput/taxi-valid*"  \
+   --output_dir=$OUTDIR \
+   --train_steps=10000
+```
+
+With the `BASIC` scale tier, and 10000 training steps, this model will take quite a while to train using Cloud MLE.
 
 # Jupyter Notebook Tips
 
